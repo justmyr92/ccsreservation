@@ -1,0 +1,104 @@
+//role_table
+role_id varchar (25) //PK
+role_name varchar (50)
+
+//client_table 
+client_id varchar (25) //PK
+client_fname varchar (25)
+client_lname varchar (25)
+client_email varchar (50)
+client_contact varchar (50)
+client_street varchar (50)
+client_barangay varchar (50)
+client_city varchar (50)
+client_password varchar (200)
+role_id varchar (25) //FK
+
+//food_table
+food_id varchar (25) //PK
+food_name varchar (50)
+food_type varchar (50)
+food_price decimal (10,2)
+food_description varchar (50)
+food_image varchar (50)
+
+//server_table
+server_id varchar (25) //PK
+server_fname varchar (25)
+server_lname varchar (25)
+role_id varchar (25) //FK
+
+//reservation_table
+reservation_id varchar (25) //PK
+client_id varchar (25) //FK
+client_fname varchar (25)
+client_lname varchar (25)
+client_email varchar (50)
+client_contact varchar (50)
+event_id varchar (25) //FK
+total_price decimal (10,2)
+
+//event_table
+event_id varchar (25) //PK
+event_name varchar (50)
+event_type varchar (50)
+event_date date
+event_time time
+event_venue varchar (50)
+event_venue_final varchar (50)
+event_theme varchar (50)
+event_motif varchar (50)
+event_guests int
+
+//transaction_table
+transaction_id varchar (25) //PK
+transaction_date date
+transaction_time time
+transaction_total decimal (10,2)
+transaction_status varchar (50)
+transaction_type varchar (50)
+transaction_payment varchar (50)
+reservation_id varchar (25) //FK
+
+//rating_table
+rating_id varchar (25) //PK
+rating_value int
+rating_comment varchar (50)
+reservation_id varchar (25) //FK
+
+//adds on table
+adds_on_id varchar (25) //PK
+adds_on_name varchar (50)
+adds_on_price decimal (10,2)
+adds_on_description varchar (50)
+adds_on_image varchar (50)
+reservation_id varchar (25) //FK
+
+//reservation_food_table
+reservation_food_id varchar (25) //PK
+reservation_id varchar (25) //FK
+food_id varchar (25) //FK
+
+//employee_table
+admin_id varchar (25) //PK
+admin_fname varchar (25)
+admin_lname varchar (25)
+admin_email varchar (50)
+admin_password varchar (200)
+role_id varchar (25) //FK
+
+//staff_table
+staff_id varchar (25) //PK
+
+staff_fname varchar (25)
+staff_lname varchar (25)
+staff_email varchar (50)
+staff_password varchar (200)
+role_id varchar (25) //FK
+
+
+
+
+
+
+
