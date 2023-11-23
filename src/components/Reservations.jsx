@@ -22,7 +22,7 @@ const Reservations = () => {
     try {
       setSubmittingRating(true); // Set loading state to true
 
-      const response = await fetch("http://localhost:7723/ratings", {
+      const response = await fetch("https://ccsreservaton.online/api/ratings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const Reservations = () => {
     const getReservations = async () => {
       try {
         const res = await fetch(
-          `http://localhost:7723/reservations/client/${userID}`
+          `https://ccsreservaton.online/api/reservations/client/${userID}`
         );
         if (!res.ok) {
           throw new Error("Failed to fetch reservations");
@@ -84,7 +84,7 @@ const Reservations = () => {
           setReservations(data);
           data.map(async (reservation) => {
             let result = await fetch(
-              `http://localhost:7723/ratings/${reservation.reservation_id}`
+              `https://ccsreservaton.online/api/ratings/${reservation.reservation_id}`
             );
             const f = await result.json();
             let new_data = {
@@ -145,7 +145,7 @@ const Reservations = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `http://localhost:7723/reservations/${reservationId}`,
+            `https://ccsreservaton.online/api/reservations/${reservationId}`,
             {
               method: "DELETE",
               headers: {
@@ -182,26 +182,26 @@ const Reservations = () => {
       console.log(selectedReservation);
       try {
         const response = await fetch(
-          `http://localhost:7723/reservations/${selectedReservation.reservation_id}`
+          `https://ccsreservaton.online/api/reservations/${selectedReservation.reservation_id}`
         );
         const res = await response.json();
 
         const response2 = await fetch(
-          `http://localhost:7723/event/${res.event_id}`
+          `https://ccsreservaton.online/api/event/${res.event_id}`
         );
         const res2 = await response2.json();
 
         const response3 = await fetch(
-          `http://localhost:7723/adds_on/${selectedReservation.reservation_id}`
+          `https://ccsreservaton.online/api/adds_on/${selectedReservation.reservation_id}`
         );
         const res3 = await response3.json();
         console.log(res3, "Asd");
-        const response4 = await fetch(`http://localhost:7723/foods`);
+        const response4 = await fetch(`https://ccsreservaton.online/api/foods`);
 
         const res4 = await response4.json();
 
         const response5 = await fetch(
-          `http://localhost:7723/reservation_food/${selectedReservation.reservation_id}`
+          `https://ccsreservaton.online/api/reservation_food/${selectedReservation.reservation_id}`
         );
 
         const res5 = await response5.json();
