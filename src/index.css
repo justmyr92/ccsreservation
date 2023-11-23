@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
+}
+
+.title {
+    font-family: "DM Serif Display", serif !important;
+}
+
+/* Apply custom scrollbar to all elements with overflow */
+*::-webkit-scrollbar {
+    width: 12px; /* Adjust as needed */
+    height: 12px; /* Adjust as needed */
+}
+
+*::-webkit-scrollbar-track {
+    background-color: transparent !important;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #0284c7 !important;
+}
+
+* {
+    scrollbar-width: 12px !important;
+    scrollbar-color: #0284c7 !important;
+}
+
+.stats-admin {
+    height: 100vh !important;
+    overflow: hidden;
+}
