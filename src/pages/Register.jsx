@@ -56,7 +56,7 @@ const Register = () => {
             role_id: "ROLE001",
         };
 
-        const response = await fetch("https://ccsreservaton.online/register", {
+        const response = await fetch("https://ccsreservaton.online/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(client),

@@ -24,7 +24,7 @@ const Announcement = () => {
     useEffect(() => {
         const getClients = async () => {
             const response = await fetch(
-                "https://ccsreservaton.online/clients"
+                "https://ccsreservaton.online/api/clients"
             );
             const data = await response.json();
             setClients(data);

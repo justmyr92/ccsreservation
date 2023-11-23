@@ -23,7 +23,7 @@ const Reservations = () => {
             setSubmittingRating(true); // Set loading state to true
 
             const response = await fetch(
-                "https://ccsreservaton.online/ratings",
+                "https://ccsreservaton.online/api/ratings",
                 {
                     method: "POST",
                     headers: {
@@ -78,7 +78,7 @@ const Reservations = () => {
         const getReservations = async () => {
             try {
                 const res = await fetch(
-                    `https://ccsreservaton.online/reservations/client/${userID}`
+                    `https://ccsreservaton.online/api/reservations/client/${userID}`
                 );
                 if (!res.ok) {
                     throw new Error("Failed to fetch reservations");
@@ -88,7 +88,7 @@ const Reservations = () => {
                     setReservations(data);
                     data.map(async (reservation) => {
                         let result = await fetch(
-                            `https://ccsreservaton.online/ratings/${reservation.reservation_id}`
+                            `https://ccsreservaton.online/api/ratings/${reservation.reservation_id}`
                         );
                         const f = await result.json();
                         let new_data = {
@@ -152,7 +152,7 @@ const Reservations = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `https://ccsreservaton.online/reservations/${reservationId}`,
+                        `https://ccsreservaton.online/api/reservations/${reservationId}`,
                         {
                             method: "DELETE",
                             headers: {
@@ -190,28 +190,28 @@ const Reservations = () => {
             console.log(selectedReservation);
             try {
                 const response = await fetch(
-                    `https://ccsreservaton.online/reservations/${selectedReservation.reservation_id}`
+                    `https://ccsreservaton.online/api/reservations/${selectedReservation.reservation_id}`
                 );
                 const res = await response.json();
 
                 const response2 = await fetch(
-                    `https://ccsreservaton.online/event/${res.event_id}`
+                    `https://ccsreservaton.online/api/event/${res.event_id}`
                 );
                 const res2 = await response2.json();
 
                 const response3 = await fetch(
-                    `https://ccsreservaton.online/adds_on/${selectedReservation.reservation_id}`
+                    `https://ccsreservaton.online/api/adds_on/${selectedReservation.reservation_id}`
                 );
                 const res3 = await response3.json();
                 console.log(res3, "Asd");
                 const response4 = await fetch(
-                    `https://ccsreservaton.online/foods`
+                    `https://ccsreservaton.online/api/foods`
                 );
 
                 const res4 = await response4.json();
 
                 const response5 = await fetch(
-                    `https://ccsreservaton.online/reservation_food/${selectedReservation.reservation_id}`
+                    `https://ccsreservaton.online/api/reservation_food/${selectedReservation.reservation_id}`
                 );
 
                 const res5 = await response5.json();

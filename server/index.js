@@ -300,7 +300,7 @@ app.patch("/api/client/:client_id", async (req, res) => {
     }
 });
 
-//https://ccsreservaton.online/clients
+//https://ccsreservaton.online/api/clients
 app.get("/api/clients", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM client_table");
@@ -311,7 +311,7 @@ app.get("/api/clients", async (req, res) => {
     }
 });
 
-//https://ccsreservaton.online/menu
+//https://ccsreservaton.online/api/menu
 app.get("/api/foods", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM food_table");

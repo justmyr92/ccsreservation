@@ -94,7 +94,7 @@ const Menu = () => {
 
     useEffect(() => {
         const fetchMenu = async () => {
-            const response = await fetch("https://ccsreservaton.online/foods");
+            const response = await fetch("https://ccsreservaton.online/api/foods");
             const result = await response.json();
             setMenu(result);
             setReload(false);
@@ -122,7 +122,7 @@ const Menu = () => {
         }
 
         try {
-            const response = await fetch("https://ccsreservaton.online/foods", {
+            const response = await fetch("https://ccsreservaton.online/api/foods", {
                 method: "POST",
                 body: formData,
             });
@@ -155,7 +155,7 @@ const Menu = () => {
 
         try {
             const response = await fetch(
-                `https://ccsreservaton.online/foods/${selectedFoodID}`,
+                `https://ccsreservaton.online/api/foods/${selectedFoodID}`,
                 {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },

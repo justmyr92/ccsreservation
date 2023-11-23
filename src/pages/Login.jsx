@@ -27,7 +27,7 @@ const Login = () => {
         };
 
         try {
-            const response = await fetch("https://ccsreservaton.online/login", {
+            const response = await fetch("https://ccsreservaton.online/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

@@ -103,7 +103,7 @@ const Dashboard = () => {
         const getProfit = async () => {
             try {
                 const response = await fetch(
-                    "https://ccsreservaton.online/payment_amount"
+                    "https://ccsreservaton.online/api/payment_amount"
                 );
 
                 if (!response.ok) {
@@ -129,7 +129,7 @@ const Dashboard = () => {
         const getClientCount = async () => {
             try {
                 const response = await fetch(
-                    "https://ccsreservaton.online/client_count"
+                    "https://ccsreservaton.online/api/client_count"
                 );
 
                 if (!response.ok) {
@@ -153,7 +153,7 @@ const Dashboard = () => {
         const getReservationCount = async () => {
             try {
                 const response = await fetch(
-                    "https://ccsreservaton.online/reservation_count"
+                    "https://ccsreservaton.online/api/reservation_count"
                 );
 
                 if (!response.ok) {
@@ -177,7 +177,7 @@ const Dashboard = () => {
         const getMenuCount = async () => {
             try {
                 const response = await fetch(
-                    "https://ccsreservaton.online/menu_count"
+                    "https://ccsreservaton.online/api/menu_count"
                 );
 
                 if (!response.ok) {
@@ -201,7 +201,7 @@ const Dashboard = () => {
         const fetchMonthlyProfit = async (month) => {
             try {
                 const response = await fetch(
-                    `https://ccsreservaton.online/transaction_sum/${month}`
+                    `https://ccsreservaton.online/api/transaction_sum/${month}`
                 );
 
                 if (!response.ok) {

@@ -62,7 +62,7 @@ const Home = () => {
                 //via post request
 
                 const response = await fetch(
-                    "https://ccsreservaton.online/client/",
+                    "https://ccsreservaton.online/api/client/",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

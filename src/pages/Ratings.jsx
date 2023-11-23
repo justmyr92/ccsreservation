@@ -14,7 +14,7 @@ const Ratings = () => {
     useEffect(() => {
         const getRatings = async () => {
             const response = await fetch(
-                "https://ccsreservaton.online/ratings"
+                "https://ccsreservaton.online/api/ratings"
             );
             const data = await response.json();
             if (data.length === null || data.length === 0) {
