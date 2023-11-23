@@ -24,14 +24,11 @@ const Reservation = () => {
             try {
                 //via post request
 
-                const response = await fetch(
-                    "https://ccsreservaton.online/api/client/",
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ client_id: customerID }),
-                    }
-                );
+                const response = await fetch("http://localhost:7723/client/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ client_id: customerID }),
+                });
                 const result = await response.json();
                 setClientData(result);
             } catch (err) {
@@ -124,22 +121,19 @@ const Reservation = () => {
 
     useEffect(() => {
         const fetchFoods = async () => {
-            const response = await fetch("https://ccsreservaton.online/api/foods");
+            const response = await fetch("http://localhost:7723/foods");
             const data = await response.json();
             setFoods(data);
         };
         const fetchCustomer = async () => {
             const client_id = customerID;
-            const response = await fetch(
-                "https://ccsreservaton.online/api/client",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({ client_id }),
-                }
-            );
+            const response = await fetch("http://localhost:7723/client", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({ client_id }),
+            });
             const data = await response.json();
             setClient(data);
 
@@ -174,7 +168,7 @@ const Reservation = () => {
         }
 
         const reservationCount = await fetch(
-            "https://ccsreservaton.online/api/reservation_count",
+            "http://localhost:7723/reservation_count",
             {
                 method: "POST",
                 headers: {
@@ -222,16 +216,13 @@ const Reservation = () => {
                     event_guests: eventGuests,
                 };
 
-                const response = await fetch(
-                    "https://ccsreservaton.online/api/events",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json",
-                        },
-                        body: JSON.stringify(eventDetails),
-                    }
-                );
+                const response = await fetch("http://localhost:7723/events", {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify(eventDetails),
+                });
 
                 const data = await response.json();
 
@@ -248,7 +239,7 @@ const Reservation = () => {
                     };
 
                     const reservationResponse = await fetch(
-                        "https://ccsreservaton.online/api/reservation",
+                        "http://localhost:7723/reservation",
                         {
                             method: "POST",
                             headers: {
@@ -270,7 +261,7 @@ const Reservation = () => {
                                 };
 
                                 const addsOnResponse = await fetch(
-                                    "https://ccsreservaton.online/api/adds_on",
+                                    "http://localhost:7723/adds_on",
                                     {
                                         method: "POST",
                                         headers: {
@@ -302,7 +293,7 @@ const Reservation = () => {
                             };
 
                             const foodResponse = await fetch(
-                                "https://ccsreservaton.online/api/reservation_food",
+                                "http://localhost:7723/reservation_food",
                                 {
                                     method: "POST",
                                     headers: {

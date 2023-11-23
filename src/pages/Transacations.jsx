@@ -56,7 +56,7 @@ const Transaction = () => {
     ];
 
     useEffect(() => {
-        const response = fetch("https://ccsreservaton.online/api/transactions");
+        const response = fetch("http://localhost:7723/transactions");
         response
             .then((res) => res.json())
             .then((data) => {

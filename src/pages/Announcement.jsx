@@ -23,9 +23,7 @@ const Announcement = () => {
 
     useEffect(() => {
         const getClients = async () => {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/clients"
-            );
+            const response = await fetch("http://localhost:7723/clients");
             const data = await response.json();
             setClients(data);
         };

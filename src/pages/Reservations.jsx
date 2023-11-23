@@ -25,9 +25,7 @@ const Reservations = () => {
 
     useEffect(() => {
         const getReservations = async () => {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/reservations"
-            );
+            const response = await fetch("http://localhost:7723/reservations");
             const result = await response.json();
             setReservations(result);
         };
@@ -38,7 +36,7 @@ const Reservations = () => {
     //     if (selectedReservation) {
     //         const getReservationDetails = async () => {
     //             const addsOnResponse = await fetch(
-    //                 `https://ccsreservaton.online/api/adds_on/${selectedReservation}`
+    //                 `http://localhost:7723/adds_on/${selectedReservation}`
     //             );
     //             const addsOnResult = await addsOnResponse.json();
     //             setAddsOn(addsOnResult);

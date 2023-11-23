@@ -30,14 +30,11 @@ const Profile = () => {
     useEffect(() => {
         const fetchClientData = async () => {
             try {
-                const response = await fetch(
-                    "https://ccsreservaton.online/api/client/",
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ client_id: customerID }),
-                    }
-                );
+                const response = await fetch("http://localhost:7723/client/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ client_id: customerID }),
+                });
                 const result = await response.json();
 
                 setClientData(result);

@@ -36,21 +36,18 @@ const Quotation = () => {
         };
 
         try {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/transaction",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                }
-            );
+            const response = await fetch("http://localhost:7723/transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
 
             const result = await response.json();
 
             if (response.ok) {
                 try {
                     const response2 = await fetch(
-                        `https://ccsreservaton.online/api/update-reservation-status/${reservation_id}`,
+                        `http://localhost:7723/update-reservation-status/${reservation_id}`,
                         {
                             method: "PATCH",
                             headers: {
@@ -106,29 +103,29 @@ const Quotation = () => {
     useEffect(() => {
         const getReservationDetails = async () => {
             const response = await fetch(
-                `https://ccsreservaton.online/api/reservations/${reservation_id}`
+                `http://localhost:7723/reservations/${reservation_id}`
             );
             const res = await response.json();
 
             const response2 = await fetch(
-                `https://ccsreservaton.online/api/event/${res.event_id}`
+                `http://localhost:7723/event/${res.event_id}`
             );
             const res2 = await response2.json();
 
             const response3 = await fetch(
-                `https://ccsreservaton.online/api/adds_on/${reservation_id}`
+                `http://localhost:7723/adds_on/${reservation_id}`
             );
             const res3 = await response3.json();
 
             const response4 = await fetch(
-                `https://ccsreservaton.online/api/foods/
+                `http://localhost:7723/foods/
                 `
             );
 
             const res4 = await response4.json();
 
             const response5 = await fetch(
-                `https://ccsreservaton.online/api/reservation_food/${reservation_id}`
+                `http://localhost:7723/reservation_food/${reservation_id}`
             );
 
             const res5 = await response5.json();
@@ -159,7 +156,7 @@ const Quotation = () => {
 
         try {
             const response = await fetch(
-                `https://ccsreservaton.online/api/update-reservation/${reservation_id}`,
+                `http://localhost:7723/update-reservation/${reservation_id}`,
                 {
                     method: "PATCH",
                     body: formData,

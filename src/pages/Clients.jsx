@@ -60,9 +60,7 @@ const Clients = () => {
     useEffect(() => {
         const getClients = async () => {
             try {
-                const response = await fetch(
-                    "https://ccsreservaton.online/api/clients"
-                );
+                const response = await fetch("http://localhost:7723/clients");
                 const result = await response.json();
                 setClients(result);
             } catch (err) {
