@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaEye, FaSearch, FaEyeSlash } from "react-icons/fa";
 
 const Staff = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
 
     const [roleID, setRoleID] = useState(localStorage.getItem("roleID"));
+
+    const [staffs, setStaffs] = useState([]);
 
     const [formData, setFormData] = useState({
         staff_id: "",
@@ -13,19 +18,72 @@ const Staff = () => {
         staff_lname: "",
         staff_email: "",
         staff_password: "",
-        role_id: "",
+        role_id: "ROLE002",
     });
+
+    const [reload, setReload] = useState(false);
+    const [search, setSearch] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const getStaff = async () => {
+        try {
+            const response = await fetch("http://localhost:7723/staff");
+            const jsonData = await response.json();
+
+            if (search !== "") {
+                //search no tcase sensitive
+                const filteredData = jsonData.filter((staff) => {
+                    return (
+                        staff.staff_id
+                            .toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                        staff.staff_fname
+                            .toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                        staff.staff_lname
+                            .toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                        staff.staff_email
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                    );
+                });
+                setStaffs(filteredData);
+            } else {
+                setStaffs(jsonData);
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    useEffect(() => {
+        getStaff();
+    }, [search, reload]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission (e.g., send data to the server)
-        // You can add your logic here
-        // closeModal(); // Close the modal after submission
+        //genarate staff id "STF + random number 1000000 - 9999999"
+        let staffID = "STF" + Math.floor(Math.random() * 9000000 + 1000000);
+        setFormData((prevData) => ({ ...prevData, staff_id: staffID }));
+        try {
+            const response = await fetch("http://localhost:7723/staff", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+
+            getStaff();
+        } catch (error) {
+            console.error(error.message);
+        }
+
+        document.getElementById("my_modal_4").close();
     };
 
     useEffect(() => {
@@ -39,49 +97,7 @@ const Staff = () => {
     }, []);
 
     const [showPassword, setShowPassword] = useState(false);
-
-    const staffData = [
-        {
-            staff_id: "1",
-            staff_fname: "Mark",
-            staff_lname: "Lopez",
-            staff_email: "markl.4@example.com",
-            staff_password: "@Mark123",
-            role_id: "ROLE002",
-        },
-        {
-            staff_id: "2",
-            staff_fname: "Emily",
-            staff_lname: "Smith",
-            staff_email: "emilys@example.com",
-            staff_password: "@Emily456",
-            role_id: "ROLE002",
-        },
-        {
-            staff_id: "3",
-            staff_fname: "David",
-            staff_lname: "Johnson",
-            staff_email: "davidj@example.com",
-            staff_password: "@David789",
-            role_id: "ROLE002",
-        },
-        {
-            staff_id: "4",
-            staff_fname: "Sophia",
-            staff_lname: "Garcia",
-            staff_email: "sophiag@example.com",
-            staff_password: "@Sophia123",
-            role_id: "ROLE002",
-        },
-        {
-            staff_id: "5",
-            staff_fname: "Alex",
-            staff_lname: "Martinez",
-            staff_email: "alexm@example.com",
-            staff_password: "@Alex456",
-            role_id: "ROLE002",
-        },
-    ];
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
 
     const togglePasswordVisibility = (row) => {
         setShowPassword(showPassword === row.staff_id ? null : row.staff_id);
@@ -108,7 +124,11 @@ const Staff = () => {
                         ? row.staff_password
                         : "********"}
                     <button onClick={() => togglePasswordVisibility(row)}>
-                        {showPassword === row.staff_id ? "Hide" : "Show"}
+                        {showPassword === row.staff_id ? (
+                            <FaEyeSlash className="text-gray-500 ml-2" />
+                        ) : (
+                            <FaEye className="text-gray-500 ml-2" />
+                        )}
                     </button>
                 </div>
             ),
@@ -117,33 +137,53 @@ const Staff = () => {
     ];
 
     return (
-        <section className="dashboard__section h-screen bg-blue-100 flex flex-row">
+        <section className="dashboard__section h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row">
             <Sidebar roleID={roleID} />
             <div className="flex flex-col w-full h-full p-6 overflow-auto">
-                <div className="bg-white rounded-lg shadow-lg p-6">
+                <div className="bg-white rounded-lg shadow-lg p-6 min-h-full">
                     <div className="flex flex-row justify-between items-center">
-                        <h1 className="text-2xl font-bold">Staff</h1>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() =>
-                                document
-                                    .getElementById("my_modal_4")
-                                    .showModal()
-                            }
-                        >
-                            Add Staff
-                        </button>
+                        <h1 className="text-2xl font-bold text-gray-700 title">
+                            Staffs
+                        </h1>
+                        <div className="flex flex-row gap-2">
+                            <div className="flex items-center space-x-2 relative">
+                                <input
+                                    type="text"
+                                    className="border border-gray-300 text-gray-900 rounded-md px-3 py-2.5 focus:outline-none focus:border-blue-500"
+                                    placeholder="Search"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <FaSearch className="absolute right-4 text-gray-500" />
+                            </div>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() =>
+                                    document
+                                        .getElementById("my_modal_4")
+                                        .showModal()
+                                }
+                            >
+                                Add Staff
+                            </button>
+                        </div>
                         <dialog id="my_modal_4" className="modal">
                             <div className="modal-box">
-                                <h3 className="font-bold text-lg">Add Staff</h3>
+                                <h3 className="font-bold text-lg title">
+                                    Add Staff
+                                </h3>
+                                <hr className="my-2 border-b-2 border-blue-500" />
                                 <form
                                     method="dialog"
                                     className="modal-backdrop"
                                     onSubmit={handleSubmit}
                                 >
-                                    <div className="form-group">
-                                        <label htmlFor="staff_fname">
-                                            First Name:
+                                    <div className="form-group flex flex-col gap-1 mb-4">
+                                        <label
+                                            htmlFor="staff_fname"
+                                            className="text-gray-700 font-medium"
+                                        >
+                                            First Name
                                         </label>
                                         <input
                                             type="text"
@@ -151,13 +191,16 @@ const Staff = () => {
                                             name="staff_fname"
                                             value={formData.staff_fname}
                                             onChange={handleChange}
-                                            className="input input-bordered"
-                                            style={{ color: "black" }} // Add this line
+                                            className="input input-bordered text-gray-700"
+                                            placeholder="Enter first name"
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="staff_lname">
-                                            Last Name:
+                                    <div className="form-group flex flex-col gap-1 mb-4">
+                                        <label
+                                            htmlFor="staff_lname"
+                                            className="text-gray-700 font-medium"
+                                        >
+                                            Last Name
                                         </label>
                                         <input
                                             type="text"
@@ -165,13 +208,16 @@ const Staff = () => {
                                             name="staff_lname"
                                             value={formData.staff_lname}
                                             onChange={handleChange}
-                                            className="input input-bordered"
-                                            style={{ color: "black" }} // Add this line
+                                            className="input input-bordered text-gray-700"
+                                            placeholder="Enter last name"
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="staff_email">
-                                            Email:
+                                    <div className="form-group flex flex-col gap-1 mb-4">
+                                        <label
+                                            htmlFor="staff_email"
+                                            className="text-gray-700"
+                                        >
+                                            Email
                                         </label>
                                         <input
                                             type="email"
@@ -179,30 +225,70 @@ const Staff = () => {
                                             name="staff_email"
                                             value={formData.staff_email}
                                             onChange={handleChange}
-                                            className="input input-bordered"
-                                            style={{ color: "black" }} // Add this line
+                                            className="input input-bordered text-gray-700"
+                                            placeholder="Enter email"
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="staff_password">
+                                    <div className="form-group flex flex-col gap-1 mb-4 relative">
+                                        <label
+                                            htmlFor="staff_password"
+                                            className="text-gray-700 font-medium"
+                                        >
                                             Password:
                                         </label>
-                                        <input
-                                            type="password"
-                                            id="staff_password"
-                                            name="staff_password"
-                                            value={formData.staff_password}
-                                            onChange={handleChange}
-                                            className="input input-bordered"
-                                            style={{ color: "black" }} // Add this line
-                                        />
+                                        <div className="flex items-center relative">
+                                            <input
+                                                type={
+                                                    showPasswordForm
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                id="staff_password"
+                                                name="staff_password"
+                                                value={formData.staff_password}
+                                                onChange={handleChange}
+                                                className="input input-bordered text-gray-700 w-full"
+                                                placeholder="Enter password"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowPasswordForm(
+                                                        !showPasswordForm
+                                                    );
+                                                }}
+                                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 cursor-pointer focus:outline-none"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={
+                                                        showPasswordForm
+                                                            ? faEyeSlash
+                                                            : faEye
+                                                    }
+                                                />
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button type="submit">Submit</button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                    >
+                                        Submit
+                                    </button>
                                 </form>
                             </div>
                         </dialog>
                     </div>
-                    <DataTable columns={columns} data={staffData} pagination />
+                    <DataTable
+                        columns={columns}
+                        data={staffs}
+                        pagination={true}
+                        noHeader={true}
+                        fixedHeader={true}
+                        fixedHeaderScrollHeight="600px"
+                        highlightOnHover={true}
+                        striped={true}
+                    />
                 </div>
             </div>
         </section>

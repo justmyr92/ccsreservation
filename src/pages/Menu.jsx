@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
 import { FaPlusSquare } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 const Menu = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
@@ -94,15 +95,36 @@ const Menu = () => {
 
     useEffect(() => {
         const fetchMenu = async () => {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/foods"
-            );
+            const response = await fetch("http://localhost:7723/foods");
             const result = await response.json();
-            setMenu(result);
+
+            // Convert search to lowercase
+            const searchLowerCase = search.toLowerCase();
+
+            // Convert all relevant fields in announcements to lowercase and perform case-insensitive comparison
+            const filteredMenu = result.filter(
+                (food) =>
+                    food.food_id
+                        .toString()
+                        .toLowerCase()
+                        .includes(searchLowerCase) ||
+                    food.food_name.toLowerCase().includes(searchLowerCase) ||
+                    food.food_type.toLowerCase().includes(searchLowerCase) ||
+                    food.food_price
+                        .toString()
+                        .toLowerCase()
+                        .includes(searchLowerCase) ||
+                    food.food_description
+                        .toLowerCase()
+                        .includes(searchLowerCase)
+            );
+
+            setMenu(filteredMenu);
             setReload(false);
         };
+
         fetchMenu();
-    }, [reload]);
+    }, [reload, search]);
 
     useEffect(() => {
         console.log(foodName, foodType, foodPrice, foodDescription, foodImage);
@@ -124,14 +146,10 @@ const Menu = () => {
         }
 
         try {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/foods",
-                {
-                    method: "POST",
-                    body: formData,
-                    credentials: "include",
-                }
-            );
+            const response = await fetch("http://localhost:7723/foods", {
+                method: "POST",
+                body: formData,
+            });
 
             const result = await response.json();
             if (result) {
@@ -161,7 +179,7 @@ const Menu = () => {
 
         try {
             const response = await fetch(
-                `https://ccsreservaton.online/api/foods/${selectedFoodID}`,
+                `http://localhost:7723/foods/${selectedFoodID}`,
                 {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
@@ -188,192 +206,198 @@ const Menu = () => {
         document.getElementById("update_food_modal").close();
     };
     return (
-        <section className="menu__section h-screen bg-blue-100 flex flex-row">
-            <Sidebar roleID={roleID} />
-            <div className="menu__container p-5 flex flex-col h-full overflow-y-auto w-[80%]">
-                {/* Add Food Modal*/}
-                <dialog id="add_food_modal" className="modal">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">Add Food</h3>
-                        <p className="py-4">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Voluptatem, nesciunt.
-                        </p>
-                        <div className="modal-action">
-                            <form
-                                method="dialog"
-                                className="flex flex-col w-full gap-2"
-                                onSubmit={handleSubmit}
-                            >
-                                <input
-                                    type="text"
-                                    placeholder="Food Name"
-                                    className="input input-bordered w-full"
-                                    value={foodName}
-                                    name="foodName"
-                                    onChange={(e) =>
-                                        setFoodName(e.target.value)
-                                    }
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Food Type"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setFoodType(e.target.value)
-                                    }
-                                    name="foodType"
-                                    value={foodType}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="Food Price"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setFoodPrice(e.target.value)
-                                    }
-                                    name="foodPrice"
-                                    value={foodPrice}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Food Description"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setFoodDescription(e.target.value)
-                                    }
-                                    name="foodDescription"
-                                    value={foodDescription}
-                                />
-                                <input
-                                    type="file"
-                                    placeholder="Food Image"
-                                    className="file-input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setFoodImage(e.target.files[0])
-                                    }
-                                    name="food_image"
-                                    ref={inputRef} // Assign the ref here
-                                />
+        <>
+            <section className="menu__section h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row">
+                <Sidebar roleID={roleID} />
+                <div className="flex flex-col w-full h-full p-3 overflow-auto">
+                    <div className="bg-white rounded-lg shadow-lg p-6">
+                        <div className="flex flex-row justify-between items-center">
+                            <h1 className="text-3xl font-bold title tracking-wide">
+                                Menu
+                            </h1>
+                            <div className="group flex flex-row items-center space-x-2">
+                                <div className="flex items-center space-x-2 relative">
+                                    <input
+                                        type="text"
+                                        className="border border-gray-300 text-gray-900 rounded-md px-3 py-2.5 focus:outline-none focus:border-blue-500"
+                                        placeholder="Search"
+                                        value={search}
+                                        onChange={(e) =>
+                                            setSearch(e.target.value)
+                                        }
+                                    />
+                                    <FaSearch className="absolute right-4 text-gray-500" />
+                                </div>
                                 <button
                                     className="btn btn-primary"
-                                    type="submit"
-                                >
-                                    Add
-                                </button>
-                                <button
-                                    className="btn"
-                                    onClick={() => {
-                                        setFoodName("");
-                                        setFoodType("");
-                                        setFoodPrice("");
-                                        setFoodDescription("");
-                                        inputRef.current.value = "";
-                                        setFoodImage("");
+                                    onClick={() =>
                                         document
                                             .getElementById("add_food_modal")
-                                            .close();
-                                    }}
+                                            .showModal()
+                                    }
                                 >
-                                    Close
+                                    <FaPlusSquare className="mr-2" />
+                                    Add Food
                                 </button>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                </dialog>
-                {/* Update Food Modal*/}
-                <dialog id="update_food_modal" className="modal">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">Update Food</h3>
 
-                        <div className="modal-action">
-                            <form
-                                method="dialog"
-                                className="flex flex-col w-full gap-2"
-                                onSubmit={handleUpdateSubmit}
-                                encType="multipart/form-data"
-                            >
-                                <input
-                                    type="text"
-                                    placeholder="Food Name"
-                                    className="input input-bordered w-full"
-                                    value={updateFoodName}
-                                    onChange={(e) =>
-                                        setUpdateFoodName(e.target.value)
-                                    }
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Food Type"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setUpdateFoodType(e.target.value)
-                                    }
-                                    value={updateFoodType}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="Food Price"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setUpdateFoodPrice(e.target.value)
-                                    }
-                                    value={updateFoodPrice}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Food Description"
-                                    className="input input-bordered w-full"
-                                    onChange={(e) =>
-                                        setUpdateFoodDescription(e.target.value)
-                                    }
-                                    value={updateFoodDescription}
-                                />
-                                <button
-                                    className="btn btn-primary"
-                                    type="submit"
-                                >
-                                    Update
-                                </button>
-                                <button
-                                    className="btn"
-                                    onClick={handleUpdateClose}
-                                >
-                                    Close
-                                </button>
-                            </form>
+                        <hr className="my-2 border-blue-500 border-b-2" />
+                        <div className="box">
+                            <DataTable
+                                columns={columns}
+                                data={menu}
+                                pagination={true}
+                                noHeader={true}
+                                fixedHeader={true}
+                                fixedHeaderScrollHeight="600px"
+                                highlightOnHover={true}
+                                striped={true}
+                            />
                         </div>
                     </div>
-                </dialog>
-                <div className="table w-full p-4 bg-white rounded-lg shadow-lg">
-                    <div className="search-container flex justify-between items-center w-content mb-2">
-                        <input
-                            type="text"
-                            className="input input-bordered w-full max-w-xs"
-                            placeholder="Search"
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                        <button
-                            className="btn btn-primary"
-                            onClick={() =>
-                                document
-                                    .getElementById("add_food_modal")
-                                    .showModal()
-                            }
-                        >
-                            <FaPlusSquare />
-                        </button>
-                    </div>
-                    <DataTable
-                        columns={columns}
-                        data={menu}
-                        pagination
-                        paginationPerPage={5}
-                        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-                    />
                 </div>
-            </div>
-        </section>
+            </section>
+            {/* Add Food Modal*/}
+            <dialog id="add_food_modal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-xl title">Add Food</h3>
+                    <div className="modal-action h-full overflow-auto">
+                        <form
+                            method="dialog"
+                            className="flex flex-col w-full gap-2"
+                            onSubmit={handleSubmit}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Food Name"
+                                className="input input-bordered w-full"
+                                value={foodName}
+                                name="foodName"
+                                onChange={(e) => setFoodName(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Food Type"
+                                className="input input-bordered w-full"
+                                onChange={(e) => setFoodType(e.target.value)}
+                                name="foodType"
+                                value={foodType}
+                            />
+                            <input
+                                type="number"
+                                placeholder="Food Price"
+                                className="input input-bordered w-full"
+                                onChange={(e) => setFoodPrice(e.target.value)}
+                                name="foodPrice"
+                                value={foodPrice}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Food Description"
+                                className="input input-bordered w-full"
+                                onChange={(e) =>
+                                    setFoodDescription(e.target.value)
+                                }
+                                name="foodDescription"
+                                value={foodDescription}
+                            />
+                            <input
+                                type="file"
+                                placeholder="Food Image"
+                                className="file-input input-bordered w-full"
+                                onChange={(e) =>
+                                    setFoodImage(e.target.files[0])
+                                }
+                                name="food_image"
+                                ref={inputRef} // Assign the ref here
+                            />
+                            <button className="btn btn-primary" type="submit">
+                                Add
+                            </button>
+                            <button
+                                className="btn"
+                                onClick={() => {
+                                    setFoodName("");
+                                    setFoodType("");
+                                    setFoodPrice("");
+                                    setFoodDescription("");
+                                    inputRef.current.value = "";
+                                    setFoodImage("");
+                                    document
+                                        .getElementById("add_food_modal")
+                                        .close();
+                                }}
+                            >
+                                Close
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+            {/* Update Food Modal*/}
+            <dialog id="update_food_modal" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Update Food</h3>
+
+                    <div className="modal-action">
+                        <form
+                            method="dialog"
+                            className="flex flex-col w-full gap-2"
+                            onSubmit={handleUpdateSubmit}
+                            encType="multipart/form-data"
+                        >
+                            <input
+                                type="text"
+                                placeholder="Food Name"
+                                className="input input-bordered w-full"
+                                value={updateFoodName}
+                                onChange={(e) =>
+                                    setUpdateFoodName(e.target.value)
+                                }
+                            />
+                            <input
+                                type="text"
+                                placeholder="Food Type"
+                                className="input input-bordered w-full"
+                                onChange={(e) =>
+                                    setUpdateFoodType(e.target.value)
+                                }
+                                value={updateFoodType}
+                            />
+                            <input
+                                type="number"
+                                placeholder="Food Price"
+                                className="input input-bordered w-full"
+                                onChange={(e) =>
+                                    setUpdateFoodPrice(e.target.value)
+                                }
+                                value={updateFoodPrice}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Food Description"
+                                className="input input-bordered w-full"
+                                onChange={(e) =>
+                                    setUpdateFoodDescription(e.target.value)
+                                }
+                                value={updateFoodDescription}
+                            />
+                            <button className="btn btn-primary" type="submit">
+                                Update
+                            </button>
+                            <button
+                                className="btn"
+                                type="button"
+                                onClick={handleUpdateClose}
+                            >
+                                Close
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </>
     );
 };
 

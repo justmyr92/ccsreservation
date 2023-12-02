@@ -62,18 +62,21 @@ const Sidebar = ({ roleID }) => {
     };
 
     return (
-        <aside className="sidebar h-screen bg-base-200 w-[20%]">
-            <ul className="menu bg-base-200">
+        <aside className="sidebar h-screen bg-white w-[25%] p-2 shadow-lg">
+            <div className="flex items-center justify-center mb-4">
+                <img src="../src/assets/logo-v2.png" alt="logo" />
+            </div>
+            <ul className="menu w-full">
                 {links.map((link, index) => (
-                    <li
-                        key={index}
-                        className={`menu__item ${
-                            link.path === window.location.pathname
-                                ? "bg-base-100"
-                                : ""
-                        }`}
-                    >
-                        <Link to={link.path} className="menu__link text-lg">
+                    <li key={index} className={`menu__item mb-1`}>
+                        <Link
+                            to={link.path}
+                            className={`menu__link text-base hover:bg-primary hover:text-white transition-all duration-300 ease-in-out ${
+                                link.path === window.location.pathname
+                                    ? "bg-primary text-white"
+                                    : "text-gray-900"
+                            }`}
+                        >
                             {link.icon}
                             {link.label}
                         </Link>
@@ -81,7 +84,7 @@ const Sidebar = ({ roleID }) => {
                 ))}
                 <li className="menu__item">
                     <button
-                        className="menu__link text-lg"
+                        className="menu__link text-base hover:bg-primary hover:text-white transition-all duration-300 ease-in-out text-gray-900"
                         onClick={() => logout()}
                     >
                         {/* font aswesome for logout */}

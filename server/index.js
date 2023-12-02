@@ -18,17 +18,11 @@ const storage = multer.diskStorage({
     },
 });
 
-const corsOptions = {
-    origin: "https://ccsreservaton.online",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // Enable CORS credentials (cookies, authorization headers)
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 const upload = multer({ storage: storage });
 
-app.get("/api/transactions", async (req, res) => {
+app.get("/transactions", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM transaction_table");
         res.json(result.rows);
@@ -39,7 +33,7 @@ app.get("/api/transactions", async (req, res) => {
 });
 
 // ROUTES //
-app.get("/api/employees", async (req, res) => {
+app.get("/employees", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM employee_table");
         res.json(result.rows);
@@ -50,7 +44,7 @@ app.get("/api/employees", async (req, res) => {
 });
 
 // POST a new employee
-app.post("/api/employees", async (req, res) => {
+app.post("/employees", async (req, res) => {
     const {
         admin_id,
         admin_fname,
@@ -82,7 +76,7 @@ app.post("/api/employees", async (req, res) => {
     }
 });
 
-app.get("/api/staff", async (req, res) => {
+app.get("/staff", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM staff_table");
         res.json(result.rows);
@@ -92,7 +86,7 @@ app.get("/api/staff", async (req, res) => {
     }
 });
 
-app.post("/api/staff", async (req, res) => {
+app.post("/staff", async (req, res) => {
     const {
         staff_id,
         staff_fname,
@@ -127,7 +121,7 @@ app.post("/api/staff", async (req, res) => {
     }
 });
 
-app.post("/api/register", async (req, res) => {
+app.post("/register", async (req, res) => {
     const {
         client_fname,
         client_lname,
@@ -196,7 +190,7 @@ app.post("/api/register", async (req, res) => {
     }
 });
 
-app.post("/api/login", async (req, res) => {
+app.post("/login", async (req, res) => {
     const { client_email, client_password } = req.body;
     console.log(req.body);
     try {
@@ -268,7 +262,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-app.patch("/api/client/:client_id", async (req, res) => {
+app.patch("/client/:client_id", async (req, res) => {
     try {
         const { client_id } = req.params;
         const {
@@ -306,8 +300,8 @@ app.patch("/api/client/:client_id", async (req, res) => {
     }
 });
 
-//https://ccsreservaton.online/api/clients
-app.get("/api/clients", async (req, res) => {
+//http://localhost:7723/clients
+app.get("/clients", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM client_table");
         res.json(result.rows);
@@ -317,8 +311,8 @@ app.get("/api/clients", async (req, res) => {
     }
 });
 
-//https://ccsreservaton.online/api/menu
-app.get("/api/foods", async (req, res) => {
+//http://localhost:7723/menu
+app.get("/foods", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM food_table");
         res.json(result.rows);
@@ -329,7 +323,7 @@ app.get("/api/foods", async (req, res) => {
 });
 
 // get from rreservation_food_table
-app.get("/api/reservation_food/:reservation_id", async (req, res) => {
+app.get("/reservation_food/:reservation_id", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT * FROM reservation_food_table WHERE reservation_id = $1",
@@ -342,7 +336,7 @@ app.get("/api/reservation_food/:reservation_id", async (req, res) => {
     }
 });
 
-app.post("/api/foods", upload.single("food_image"), async (req, res) => {
+app.post("/foods", upload.single("food_image"), async (req, res) => {
     //goods
     try {
         let id = "FD_" + Math.random().toString(36).substr(2, 9); // Generate a unique food_id (you may need a more sophisticated approach)
@@ -375,7 +369,7 @@ app.post("/api/foods", upload.single("food_image"), async (req, res) => {
     }
 });
 
-app.patch("/api/foods/:id", async (req, res) => {
+app.patch("/foods/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { food_name, food_type, food_price, food_description } = req.body;
@@ -403,7 +397,7 @@ app.patch("/api/foods/:id", async (req, res) => {
 });
 
 //get customer info via post
-app.post("/api/client", async (req, res) => {
+app.post("/client", async (req, res) => {
     try {
         const { client_id } = req.body;
         const result = await pool.query(
@@ -418,7 +412,7 @@ app.post("/api/client", async (req, res) => {
 });
 
 //add event
-app.post("/api/events", async (req, res) => {
+app.post("/events", async (req, res) => {
     try {
         //event_id varchar (25) //PK
         // event_name varchar (50)
@@ -473,7 +467,7 @@ app.post("/api/events", async (req, res) => {
     }
 });
 
-app.get("/api/events", async (req, res) => {
+app.get("/events", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM event_table");
         res.json(result.rows);
@@ -483,7 +477,7 @@ app.get("/api/events", async (req, res) => {
     }
 });
 
-app.post("/api/reservation", async (req, res) => {
+app.post("/reservation", async (req, res) => {
     try {
         // Generate a unique reservation_id from 100000 to 999999
         let id = "RS" + Math.floor(Math.random() * 900000 + 100000);
@@ -525,7 +519,7 @@ app.post("/api/reservation", async (req, res) => {
 });
 
 //get reservation client info via post using client_id
-app.post("/api/reservation_count", async (req, res) => {
+app.post("/reservation_count", async (req, res) => {
     try {
         const { client_id } = req.body;
 
@@ -541,9 +535,12 @@ app.post("/api/reservation_count", async (req, res) => {
     }
 });
 
-app.get("/api/reservations", async (req, res) => {
+app.get("/reservations", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM reservation_table");
+        const result = await pool.query(
+            //order by reservation date
+            "SELECT * FROM reservation_table"
+        );
         res.json(result.rows);
     } catch (error) {
         console.error(error);
@@ -551,7 +548,7 @@ app.get("/api/reservations", async (req, res) => {
     }
 });
 
-app.get("/api/reservations/:reservation_id", async (req, res) => {
+app.get("/reservations/:reservation_id", async (req, res) => {
     try {
         const { reservation_id } = req.params;
         const result = await pool.query(
@@ -566,7 +563,7 @@ app.get("/api/reservations/:reservation_id", async (req, res) => {
     }
 });
 
-app.get("/api/reservations/client/:client_id", async (req, res) => {
+app.get("/reservations/client/:client_id", async (req, res) => {
     try {
         const { client_id } = req.params;
         console.log(client_id);
@@ -583,7 +580,7 @@ app.get("/api/reservations/client/:client_id", async (req, res) => {
     }
 });
 
-app.delete("/api/reservations/:reservation_id", async (req, res) => {
+app.delete("/reservations/:reservation_id", async (req, res) => {
     try {
         const { reservation_id } = req.params;
 
@@ -618,7 +615,7 @@ app.delete("/api/reservations/:reservation_id", async (req, res) => {
     }
 });
 
-app.post("/api/adds_on", async (req, res) => {
+app.post("/adds_on", async (req, res) => {
     try {
         let id = "AO_" + Math.random().toString(36).substr(2, 9); // Generate a unique adds_on_id (you may need a more sophisticated approach)
 
@@ -643,7 +640,7 @@ app.post("/api/adds_on", async (req, res) => {
     }
 });
 
-app.get("/api/adds_on/:reservation_id", async (req, res) => {
+app.get("/adds_on/:reservation_id", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT * FROM adds_on_table WHERE reservation_id = $1",
@@ -656,7 +653,7 @@ app.get("/api/adds_on/:reservation_id", async (req, res) => {
     }
 });
 
-app.get("/api/event/:event_id", async (req, res) => {
+app.get("/event/:event_id", async (req, res) => {
     try {
         const { event_id } = req.params;
         const result = await pool.query(
@@ -680,7 +677,7 @@ app.get("/api/event/:event_id", async (req, res) => {
 // transaction_payment varchar (50)
 // reservation_id varchar (25) //FK
 
-app.post("/api/transaction", async (req, res) => {
+app.post("/transaction", async (req, res) => {
     try {
         const {
             transaction_id,
@@ -718,7 +715,7 @@ app.post("/api/transaction", async (req, res) => {
 });
 
 //update status
-app.patch("/api/update-reservation-status/:reservationId", async (req, res) => {
+app.patch("/update-reservation-status/:reservationId", async (req, res) => {
     try {
         const { reservationId } = req.params;
         const { status } = req.body;
@@ -753,7 +750,6 @@ app.patch(
             const { status, price } = req.body;
 
             const fileData = "../src/assets/foods/" + req.file.filename;
-
             // Update data in the database
             const query = `
         UPDATE reservation_table
@@ -780,7 +776,33 @@ app.patch(
     }
 );
 
-app.post("/api/reservation_food", async (req, res) => {
+app.patch("/update-status/:reservationId", async (req, res) => {
+    try {
+        const { reservationId } = req.params;
+        const { status } = req.body;
+        const query = `
+    UPDATE reservation_table
+    SET status = $1
+    WHERE reservation_id = $2
+    RETURNING *;
+  `;
+        console.log(status, reservationId, "asdasd");
+        const result = await pool.query(query, [status, reservationId]);
+        console.log(result);
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+        });
+    }
+});
+
+app.post("/reservation_food", async (req, res) => {
     try {
         const id = "RF_" + Math.random().toString(36).substr(2, 9); // Generate a unique reservation_food_id (you may need a more sophisticated approach)
 
@@ -801,7 +823,7 @@ app.post("/api/reservation_food", async (req, res) => {
     }
 });
 
-app.get("/api/ratings/:reservation_id", async (req, res) => {
+app.get("/ratings/:reservation_id", async (req, res) => {
     try {
         const { reservation_id } = req.params;
         const result = await pool.query(
@@ -815,7 +837,7 @@ app.get("/api/ratings/:reservation_id", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
-app.post("/api/ratings", async (req, res) => {
+app.post("/ratings", async (req, res) => {
     try {
         const { rating_id, rating_value, rating_comment, reservation_id } =
             req.body;
@@ -846,7 +868,7 @@ app.post("/api/ratings", async (req, res) => {
     }
 });
 
-app.get("/api/ratings", async (req, res) => {
+app.get("/ratings", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT rating_table.*, reservation_table.client_fname, reservation_table.client_lname FROM rating_table INNER JOIN reservation_table ON rating_table.reservation_id = reservation_table.reservation_id"
@@ -860,7 +882,7 @@ app.get("/api/ratings", async (req, res) => {
 
 //select all payment from transacations
 
-app.get("/api/payment_amount", async (req, res) => {
+app.get("/payment_amount", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT SUM(transaction_total) FROM transaction_table"
@@ -872,7 +894,7 @@ app.get("/api/payment_amount", async (req, res) => {
     }
 });
 
-app.get("/api/client_count", async (req, res) => {
+app.get("/client_count", async (req, res) => {
     try {
         const result = await pool.query("SELECT COUNT(*) FROM client_table");
         res.json(result.rows[0]);
@@ -884,7 +906,7 @@ app.get("/api/client_count", async (req, res) => {
 
 //count all reservations
 
-app.get("/api/reservation_count", async (req, res) => {
+app.get("/reservation_count", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT COUNT(*) FROM reservation_table"
@@ -898,7 +920,7 @@ app.get("/api/reservation_count", async (req, res) => {
 
 //count all menu items
 
-app.get("/api/menu_count", async (req, res) => {
+app.get("/menu_count", async (req, res) => {
     try {
         const result = await pool.query("SELECT COUNT(*) FROM food_table");
         res.json(result.rows[0]);
@@ -910,7 +932,7 @@ app.get("/api/menu_count", async (req, res) => {
 
 //sum all transaction_total by extracting month and by using current_year
 
-app.get("/api/transaction_sum/:month", async (req, res) => {
+app.get("/transaction_sum/:month", async (req, res) => {
     try {
         const year = new Date().getFullYear();
         const { month } = req.params;
@@ -926,7 +948,7 @@ app.get("/api/transaction_sum/:month", async (req, res) => {
     }
 });
 
-app.get("/api/status/:status", async (req, res) => {
+app.get("/status/:status", async (req, res) => {
     try {
         const result = await pool.query(
             "SELECT COUNT(*) FROM reservation_table WHERE status = $1"
@@ -939,7 +961,7 @@ app.get("/api/status/:status", async (req, res) => {
 });
 
 //sql inner join event table, reservation table and rating table
-app.get("/api/event_reservation_rating/:client_id", async (req, res) => {
+app.get("/event_reservation_rating/:client_id", async (req, res) => {
     try {
         const { client_id } = req.params;
         const result = await pool.query(
@@ -954,7 +976,7 @@ app.get("/api/event_reservation_rating/:client_id", async (req, res) => {
     }
 });
 
-app.delete("/api/ratings/:rating_id", async (req, res) => {
+app.delete("/ratings/:rating_id", async (req, res) => {
     try {
         const { rating_id } = req.params;
 
@@ -968,6 +990,98 @@ app.delete("/api/ratings/:rating_id", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+//get all types of foods distinct
+app.get("/food_types/:food_type", async (req, res) => {
+    try {
+        const { food_type } = req.params;
+        const result = await pool.query(
+            "SELECT * FROM food_table WHERE food_type = $1",
+
+            [food_type]
+        );
+        console.log(result);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+//get all types of foods distinct
+app.get("/distinct/food_types", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT DISTINCT food_type FROM food_table"
+        );
+        console.log(result);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+//get status and their count
+app.get("/status_count", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT status, COUNT(*) FROM reservation_table GROUP BY status"
+        );
+        console.log(result);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.post("/announcements", async (req, res) => {
+    try {
+        const {
+            announcement_id,
+            title,
+            announcement_message,
+            announcement_date,
+        } = req.body;
+
+        const insertQuery = `
+        INSERT INTO announcements (announcement_id, title, announcement_message, announcement_date)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;
+      `;
+
+        const result = await pool.query(insertQuery, [
+            announcement_id,
+            title,
+            announcement_message,
+            announcement_date,
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+        });
+    }
+});
+
+app.get("/announcements", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM announcements");
+        console.log(result);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is starting on port ${process.env.PORT}`);
     console.log("Grinding, grinding, grinding... ✊");

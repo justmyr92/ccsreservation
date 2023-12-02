@@ -1,84 +1,138 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
+import { FaSearch } from "react-icons/fa";
 
 const Transaction = () => {
-  const [userID, setUserID] = useState(localStorage.getItem("userID"));
-  const [roleID, setRoleID] = useState(localStorage.getItem("roleID"));
+    const [userID, setUserID] = useState(localStorage.getItem("userID"));
+    const [roleID, setRoleID] = useState(localStorage.getItem("roleID"));
 
-  useEffect(() => {
-    if (!userID) {
-      window.location.href = "/login";
-    } else {
-      if (roleID === "ROLE001") {
-        window.location.href = "/";
-      }
-    }
-  }, []);
+    useEffect(() => {
+        if (!userID) {
+            window.location.href = "/login";
+        } else {
+            if (roleID === "ROLE001") {
+                window.location.href = "/";
+            }
+        }
+    }, []);
 
-  // transaction_id | transaction_date | transaction_time | transaction_total | transaction_status | transaction_type | transaction_payment | reservation_id
+    const [transactions, setTransactions] = useState([]);
 
-  const [transactions, setTransactions] = useState([]);
+    const columns = [
+        {
+            name: "ID",
+            selector: (row) => row.transaction_id,
+        },
+        {
+            name: "Date",
+            selector: (row) => row.transaction_date,
+        },
+        {
+            name: "Time",
+            selector: (row) => row.transaction_time,
+        },
+        {
+            name: "Total",
+            selector: (row) => row.transaction_total,
+        },
+        {
+            name: "Status",
+            selector: (row) => row.transaction_status,
+        },
+        {
+            name: "Type",
+            selector: (row) => row.transaction_type,
+        },
+        {
+            name: "Payment",
+            selector: (row) => row.transaction_payment,
+        },
+        {
+            name: "Reservation ID",
+            selector: (row) => row.reservation_id,
+        },
+    ];
+    const [search, setSearch] = useState("");
+    useEffect(() => {
+        const getClients = async () => {
+            const response = fetch("http://localhost:7723/transactions");
+            const data = await (await response).json();
+            setTransactions(data);
+        };
 
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.transaction_id,
-    },
-    {
-      name: "Date",
-      selector: (row) => row.transaction_date,
-    },
-    {
-      name: "Time",
-      selector: (row) => row.transaction_time,
-    },
-    {
-      name: "Total",
-      selector: (row) => row.transaction_total,
-    },
-    {
-      name: "Status",
-      selector: (row) => row.transaction_status,
-    },
-    {
-      name: "Type",
-      selector: (row) => row.transaction_type,
-    },
-    {
-      name: "Payment",
-      selector: (row) => row.transaction_payment,
-    },
-    {
-      name: "Reservation ID",
-      selector: (row) => row.reservation_id,
-    },
-  ];
+        if (search === "") {
+            getClients();
+        } else {
+            setTransactions(
+                transactions.filter((transaction) => {
+                    return (
+                        transaction.transaction_id
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_date
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_time
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_total
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_status
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_type
+                            .toString()
+                            .includes(search) ||
+                        transaction.transaction_payment
+                            .toString()
+                            .includes(search) ||
+                        transaction.reservation_id.toString().includes(search)
+                    );
+                })
+            );
+        }
+    }, [search]);
 
-  useEffect(() => {
-    const response = fetch("https://ccsreservaton.online/api/transactions");
-    response
-      .then((res) => res.json())
-      .then((data) => {
-        setTransactions(data);
-      });
-  }, []);
+    return (
+        <section className="dashboard__section h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row">
+            <Sidebar roleID={roleID} />
+            <div className="flex flex-col w-full h-full p-3 overflow-auto">
+                <div className="bg-white rounded-lg shadow-lg p-6 min-h-full">
+                    <div className="flex flex-row justify-between items-center">
+                        <h1 className="text-3xl font-bold title tracking-wide">
+                            Transactions
+                        </h1>
+                        <div className="flex items-center space-x-2 relative">
+                            <input
+                                type="text"
+                                className="border border-gray-300 text-gray-900 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                placeholder="Search"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                            <FaSearch className="absolute right-4 text-gray-500" />
+                        </div>
+                    </div>
+                    <hr className="my-2 border-blue-500 border-b-2" />
 
-  return (
-    <section className="dashboard__section h-screen bg-blue-100 flex flex-row">
-      <Sidebar roleID={roleID} />
-      <div className="clients__container p-5 flex flex-col w-full">
-        <div className="table p-4 bg-white rounded-lg shadow-lg overflow-x-auto w-full">
-          <div className="flex justify-between">
-            <h3 className="text-2xl">Transactions</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <DataTable columns={columns} data={transactions} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+                    <div className="box">
+                        <DataTable
+                            columns={columns}
+                            data={transactions}
+                            pagination={true}
+                            noHeader={true}
+                            fixedHeader={true}
+                            fixedHeaderScrollHeight="600px"
+                            highlightOnHover={true}
+                            striped={true}
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default Transaction;

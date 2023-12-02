@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Swal from "sweetalert2";
 
@@ -36,21 +36,18 @@ const Quotation = () => {
         };
 
         try {
-            const response = await fetch(
-                "https://ccsreservaton.online/api/transaction",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                }
-            );
+            const response = await fetch("http://localhost:7723/transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
 
             const result = await response.json();
 
             if (response.ok) {
                 try {
                     const response2 = await fetch(
-                        `https://ccsreservaton.online/api/update-reservation-status/${reservation_id}`,
+                        `http://localhost:7723/update-reservation-status/${reservation_id}`,
                         {
                             method: "PATCH",
                             headers: {
@@ -106,29 +103,29 @@ const Quotation = () => {
     useEffect(() => {
         const getReservationDetails = async () => {
             const response = await fetch(
-                `https://ccsreservaton.online/api/reservations/${reservation_id}`
+                `http://localhost:7723/reservations/${reservation_id}`
             );
             const res = await response.json();
 
             const response2 = await fetch(
-                `https://ccsreservaton.online/api/event/${res.event_id}`
+                `http://localhost:7723/event/${res.event_id}`
             );
             const res2 = await response2.json();
 
             const response3 = await fetch(
-                `https://ccsreservaton.online/api/adds_on/${reservation_id}`
+                `http://localhost:7723/adds_on/${reservation_id}`
             );
             const res3 = await response3.json();
 
             const response4 = await fetch(
-                `https://ccsreservaton.online/api/foods/
+                `http://localhost:7723/foods/
                 `
             );
 
             const res4 = await response4.json();
 
             const response5 = await fetch(
-                `https://ccsreservaton.online/api/reservation_food/${reservation_id}`
+                `http://localhost:7723/reservation_food/${reservation_id}`
             );
 
             const res5 = await response5.json();
@@ -146,7 +143,7 @@ const Quotation = () => {
 
     const [newStatus, setNewStatus] = useState("Approve"); // "Approve" or "Decline"
     const [price, setPrice] = useState(0);
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState([]); // File object
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -154,20 +151,37 @@ const Quotation = () => {
         // Create FormData object to send files
         const formData = new FormData();
         formData.append("status", newStatus);
-        formData.append("price", price);
-        formData.append("file", file);
+
+        if (newStatus === "Approve") {
+            formData.append("price", price);
+            formData.append("file", file);
+        }
 
         try {
-            const response = await fetch(
-                `https://ccsreservaton.online/api/update-reservation/${reservation_id}`,
-                {
-                    method: "PATCH",
-                    credentials: "include",
-                    body: formData,
-                }
-            );
+            let response = "";
+            if (newStatus === "Approve") {
+                response = await fetch(
+                    `http://localhost:7723/update-reservation/${reservation_id}`,
+                    {
+                        method: "PATCH",
+                        body: formData,
+                    }
+                );
+            } else {
+                response = await fetch(
+                    `http://localhost:7723/update-status/${reservation_id}`,
+                    {
+                        method: "PATCH",
+                        body: JSON.stringify({ status: newStatus }),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+            }
 
             document.getElementById("my_modal_2").close();
+
             if (response.ok) {
                 Swal.fire({
                     title: "Success!",
@@ -190,41 +204,63 @@ const Quotation = () => {
         } catch (error) {
             console.error("Error during form submission:", error);
         }
-        //
     };
-    return (
-        <section className="quotation__section h-screen bg-blue-100 flex flex-row">
-            <Sidebar roleID={roleID} />
 
-            <div className="clients__container p-5 flex flex-col w-[80%] h-full overflow-y-auto">
-                <div className="w-full bg-white rounded-lg shadow relative p-5">
-                    <table className="table">
-                        <thead className="bg-gray-200">
-                            <tr className="text-white">
-                                <th
-                                    colSpan="2"
-                                    className="text-center p-5 text-lg text-gray-800"
-                                >
-                                    Quotation
-                                </th>
-                            </tr>
-                        </thead>
+    return (
+        <section className="h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row">
+            <Sidebar roleID={roleID} />
+            <div className="flex flex-col w-full h-full p-3 overflow-auto">
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                    <div className="header">
+                        <div className="flex flex-row justify-between items-center mb-2">
+                            <h1 className="text-3xl font-bold title tracking-wide">
+                                Quotation
+                            </h1>
+                            <Link
+                                to="/reservations"
+                                className="btn btn-primary"
+                            >
+                                Back
+                            </Link>
+                        </div>
+                        <p className="text-gray-900 text-sm">
+                            lorem ipsum dolor sit amet consectetur adipisicing
+                            elit sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua ut enim ad minim veniam quis
+                            nostrud.
+                        </p>
+                    </div>
+                    <hr className="my-2 border-gray-300" />
+                    <table className="table table-zebra">
                         <tbody>
                             {reservation && (
                                 <>
                                     <tr>
-                                        <td>Client Name:</td>
+                                        <th className="title text-xl font-bold">
+                                            Client Details:
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>Status:</th>
+                                        <td>{reservation.status}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Reservation ID:</th>
+                                        <td>{reservation.reservation_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Name</th>
                                         <td>
                                             {reservation.client_fname}{" "}
                                             {reservation.client_lname}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Contact Number:</td>
+                                        <th>Contact Number:</th>
                                         <td>{reservation.client_contact}</td>
                                     </tr>
                                     <tr>
-                                        <td>Email Address:</td>
+                                        <th>Email Address:</th>
                                         <td>{reservation.client_email}</td>
                                     </tr>
                                 </>
@@ -232,15 +268,15 @@ const Quotation = () => {
                             {
                                 <>
                                     <tr>
-                                        <td>Event Name:</td>
+                                        <th>Event Name:</th>
                                         <td>{event.event_name}</td>
                                     </tr>
                                     <tr>
-                                        <td>Event Type:</td>
+                                        <th>Event Type:</th>
                                         <td>{event.event_type}</td>
                                     </tr>
                                     <tr>
-                                        <td>Event Date:</td>
+                                        <th>Event Date:</th>
                                         <td>
                                             {event.event_date &&
                                                 event.event_date.split("T")[0] +
@@ -249,39 +285,48 @@ const Quotation = () => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Event Venue:</td>
+                                        <th>Event Venue:</th>
                                         <td>{event.event_venue}</td>
                                     </tr>
                                     <tr>
-                                        <td>Event Theme:</td>
+                                        <th>Event Theme:</th>
                                         <td>{event.event_theme}</td>
                                     </tr>
                                     <tr>
-                                        <td>Event Motif</td>
+                                        <th>Event Motif</th>
                                         <td>{event.event_motif}</td>
                                     </tr>
                                     <tr>
-                                        <td>Event Guests</td>
+                                        <th>Event Guests</th>
                                         <td>{event.event_guests}</td>
                                     </tr>
                                 </>
                             }
                             {addsOn && (
                                 <tr>
-                                    <th>Adds On:</th>
+                                    <th className="title text-xl font-bold">
+                                        Adds On:
+                                    </th>
                                 </tr>
                             )}
                             {addsOn &&
-                                addsOn.map((add) => (
+                                addsOn.map((add, index) => (
                                     <tr>
-                                        <td>{add.adds_on_name}</td>
+                                        <td>
+                                            {index +
+                                                1 +
+                                                ". " +
+                                                add.adds_on_name}
+                                        </td>
                                     </tr>
                                 ))}
 
                             {
                                 foods && (
                                     <tr>
-                                        <th>Food:</th>
+                                        <th className="title text-xl font-bold">
+                                            Foods:
+                                        </th>
                                     </tr>
                                 ) //food
                             }
@@ -292,11 +337,14 @@ const Quotation = () => {
                                         {/* map reserved foods * and compare to food.food_id * an prnit food.food_name */}
                                         {reservedFoods &&
                                             reservedFoods.map(
-                                                (reservedFood) =>
+                                                (reservedFood, index) =>
                                                     reservedFood.food_id ===
                                                         food.food_id && (
                                                         <td>
-                                                            {food.food_name}
+                                                            {index +
+                                                                1 +
+                                                                ". " +
+                                                                food.food_name}
                                                         </td>
                                                     )
                                             )}
@@ -305,7 +353,7 @@ const Quotation = () => {
                             {
                                 <>
                                     <tr>
-                                        <td>Total:</td>
+                                        <th>Total Price:</th>
                                         <td>{reservation.total_price}</td>
                                     </tr>
                                 </>
@@ -468,7 +516,10 @@ const Quotation = () => {
                                                         placeholder="Price"
                                                         className="input input-bordered w-full outline-none focus:outline-none"
                                                         name="price"
-                                                        required
+                                                        required={
+                                                            newStatus ===
+                                                            "Approve"
+                                                        }
                                                         value={price}
                                                         onChange={(e) =>
                                                             setPrice(
@@ -488,7 +539,10 @@ const Quotation = () => {
                                                         type="file"
                                                         className="file-input input-bordered w-full outline-none focus:outline-none"
                                                         name="file"
-                                                        required
+                                                        required={
+                                                            newStatus ===
+                                                            "Approve"
+                                                        }
                                                         onChange={(e) =>
                                                             setFile(
                                                                 e.target

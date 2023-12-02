@@ -35,3 +35,8 @@
     height: 100vh !important;
     overflow: hidden;
 }
+
+.active {
+    background-color: #0284c7 !important;
+    color: white !important;
+}

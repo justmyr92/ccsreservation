@@ -21,16 +21,14 @@ const StatementCard = () => {
             content:
                 "Our sincerest gratitude to Calinao’s Catering Services for making our Inay’s 60th birthday celebrate an occasion truly worth remembering. Thank you Pareng Romeo Calinao and Mareng Ailleen Calinao.",
             name: "Lanievi DP",
-            position:
-                "Customer",
+            position: "Customer",
         },
         {
             title: "Lovely food and great service!",
             content:
                 "Appreciation to Calinao’s Catering for a job well done on my daughters bday part last October, The owner Sir Romeo Caliao was outstandingly helpful in making the event a success, with the beautiful elegant decoration, lovely food and great service, it’s highly recommended!",
             name: "Regie Landicho Bullagay",
-            position:
-                "Customer",
+            position: "Customer",
         },
         {
             title: "Masarap ang foods and affordable.",
@@ -57,16 +55,14 @@ const StatementCard = () => {
             content:
                 "Kahit may konting glitches na nangyari before preparing the resort, still they we’re able to cope up. The food itself is marasap, yung service ng mga staff, super supportive and above all super approachable ng mag asawang Romeo Calinao. Thanks for making our son’s event successful!",
             name: "Yam Cuento",
-            position:
-                "Customer",
+            position: "Customer",
         },
         {
             title: "Fully satisfied po kami.",
             content:
                 "Thank you po ng madam isa magandang arranement at display sa 30th anniversary ng aming parents. Fully satisfied po kami sa service po. Sa next event po ulit!",
             name: "Karen Andal Doce",
-            position:
-                "Customer",
+            position: "Customer",
         },
         {
             title: "No regret po for choosing you.",

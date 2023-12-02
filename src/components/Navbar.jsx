@@ -73,38 +73,38 @@ const Navbar = ({ clientData }) => {
                         <div className="hidden sm:ml-6 md:block md:ml-10 sm:space-x-8 sm:block">
                             <div className="flex space-x-4 items-center">
                                 <a
-                                    href="#home"
+                                    href="/#home"
                                     className="hover:bg-white hover:text-black text-white rounded-full px-3 py-2 text-sm font-medium"
                                     aria-current="page"
                                 >
                                     Home
                                 </a>
                                 <a
-                                    href="#services"
+                                    href="/#services"
                                     className="text-white hover:bg-white hover:text-black rounded-full px-3 py-2 text-sm font-medium"
                                 >
                                     Services
                                 </a>
                                 <a
-                                    href="#about"
+                                    href="/#about"
                                     className="text-white hover:bg-white hover:text-black rounded-full px-3 py-2 text-sm font-medium"
                                 >
                                     About
                                 </a>
                                 <a
-                                    href="#achievements"
+                                    href="/#achievements"
                                     className="text-white hover:bg-white hover:text-black rounded-full px-3 py-2 text-sm font-medium"
                                 >
                                     Achievements
                                 </a>
                                 <a
-                                    href="#find"
+                                    href="/#find"
                                     className="text-white hover:bg-white hover:text-black rounded-full px-3 py-2 text-sm font-medium"
                                 >
                                     Find Us
                                 </a>
                                 <a
-                                    href="#contact"
+                                    href="/#contact"
                                     className="text-white hover:bg-white hover:text-black rounded-full px-3 py-2 text-sm font-medium"
                                 >
                                     Contact Us
@@ -122,17 +122,17 @@ const Navbar = ({ clientData }) => {
                                             className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52 text-base font-medium"
                                         >
                                             <li>
-                                                <Link to="/profile">
+                                                <Link to="/user/profile">
                                                     Profile
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link to="/profile">
+                                                <Link to="/user/reservations">
                                                     Reservations
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link to="/profile">
+                                                <Link to="/user/ratings">
                                                     Ratings
                                                 </Link>
                                             </li>

@@ -13,6 +13,7 @@ import Announcement from "./pages/Announcement";
 import Ratings from "./pages/Ratings";
 import Transaction from "./pages/Transacations";
 import Staff from "./pages/Staff";
+import Samp from "./pages/Samp";
 
 function App() {
     return (
@@ -34,12 +35,13 @@ function App() {
                     path="/quotation/:reservation_id"
                     element={<Quotation />}
                 />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/user/:page" element={<Profile />} />
                 <Route path="/announcements" element={<Announcement />} />
                 <Route path="/ratings" element={<Ratings />} />
                 <Route path="/transactions" element={<Transaction />} />
                 {/* for /staff */}
                 <Route path="/staff" element={<Staff />} />
+                <Route path="/sample" element={<Samp />} />
             </Routes>
         </BrowserRouter>
     );
