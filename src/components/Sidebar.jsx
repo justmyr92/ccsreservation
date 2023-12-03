@@ -41,11 +41,11 @@ const Sidebar = ({ roleID }) => {
     } else if (roleID === "ROLE002") {
         links = [
             { path: "/menu", icon: <FaList />, label: "Menu" },
-            { path: "/events", icon: <FaRegCalendarCheck />, label: "Events" },
+            // { path: "/events", icon: <FaRegCalendarCheck />, label: "Events" },
             {
-                path: "/transaction",
+                path: "/transactions",
                 icon: <FaReceipt />,
-                label: "Transaction",
+                label: "Transactions",
             },
             {
                 path: "/reservations",

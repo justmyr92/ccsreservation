@@ -370,7 +370,8 @@ const Quotation = () => {
                             }
                             disabled={
                                 reservation.status === "Pending" ||
-                                reservation.status === "Completed"
+                                reservation.status === "Completed" ||
+                                reservation.status === "Decline"
                             }
                         >
                             Set Payment

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
 import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Announcement = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
     const [roleID, setRoleID] = useState(localStorage.getItem("roleID"));
     const [loading, setLoading] = useState(false);
+    const [reload, setReload] = useState(false);
     useEffect(() => {
         if (!userID) {
             window.location.href = "/login";
@@ -24,6 +26,29 @@ const Announcement = () => {
     const [clients, setClients] = useState([]);
     const [announcements, setAnnouncements] = useState([]);
     const [search, setSearch] = useState("");
+
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState("");
+
+    const handleEdit = (row) => {
+        setSelectedAnnouncement(row);
+        document.getElementById("my_modal_3").showModal();
+    };
+
+    const [editTitle, setEditTitle] = useState("");
+    const [editAnnouncement, setEditAnnouncement] = useState("");
+
+    // Function to populate the edit form with existing values
+    const populateEditForm = () => {
+        // Check if there's a selected announcement
+        if (selectedAnnouncement) {
+            setEditTitle(selectedAnnouncement.title);
+            setEditAnnouncement(selectedAnnouncement.announcement_message);
+        }
+    };
+
+    useEffect(() => {
+        populateEditForm();
+    }, [selectedAnnouncement]);
 
     const columns = [
         {
@@ -64,16 +89,110 @@ const Announcement = () => {
             sortable: true,
             cell: (row) => (
                 <div className="flex gap-2">
-                    <button className="btn btn-primary">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handleEdit(row)}
+                    >
                         <FaEdit />
                     </button>
-                    <button className="btn btn-error">
+                    <button
+                        className="btn btn-error"
+                        onClick={() =>
+                            handleDeleteAnnouncement(row.announcement_id)
+                        }
+                    >
                         <FaTrash />
                     </button>
                 </div>
             ),
         },
     ];
+    // Function to handle form submission for editing
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+
+        document.getElementById("my_modal_3").close();
+        // Show a confirmation dialog before updating
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to update the announcement. Do you want to proceed?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, update it!",
+        }).then(async (result) => {
+            // Check if the user clicked the "Yes" button
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(
+                        `http://localhost:7723/announcements/${selectedAnnouncement.announcement_id}`,
+                        {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                title: editTitle,
+                                announcement_message: editAnnouncement,
+                            }),
+                        }
+                    );
+
+                    if (response.ok) {
+                        // Show success message with specific feedback
+                        Swal.fire({
+                            icon: "success",
+                            title: "Announcement Updated",
+                            text: "The announcement has been successfully updated.",
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "OK",
+                        }).then(() => {
+                            setReload(true);
+                        });
+                    } else {
+                        // Handle non-successful response (e.g., server error)
+                        throw new Error("Failed to update announcement");
+                    }
+                } catch (error) {
+                    console.error(
+                        "Error updating announcement:",
+                        error.message
+                    );
+                    // Show an error message to the user
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "An error occurred while updating the announcement. Please try again.",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "OK",
+                    });
+                }
+            }
+        });
+    };
+
+    const handleDeleteAnnouncement = async (announcement_id) => {
+        Swal.fire({
+            icon: "warning", // Change this to "warning"
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        }).then(async (result) => {
+            // Check if the user clicked the "Confirm" button
+            if (result.isConfirmed) {
+                const response = await fetch(
+                    `http://localhost:7723/announcements/${announcement_id}`,
+                    {
+                        method: "DELETE",
+                    }
+                );
+                setReload(true);
+            }
+        });
+    };
 
     useEffect(() => {
         const getClients = async () => {
@@ -127,7 +246,9 @@ const Announcement = () => {
         };
 
         fetchDataAndFilter();
-    }, [search]);
+
+        setReload(false);
+    }, [search, reload]);
 
     // const sendEmail = async (e) => {
     //     e.preventDefault();
@@ -394,6 +515,49 @@ const Announcement = () => {
                             </span>
                         </form>
                     </div>
+                </div>
+            </dialog>
+            <dialog id="my_modal_3" className="modal">
+                <div className="modal-box">
+                    <form onSubmit={handleEditSubmit}>
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                            onClick={() =>
+                                document.getElementById("my_modal_3").close()
+                            }
+                        >
+                            ✕
+                        </button>
+                        <label className="text-xl font-bold title">
+                            Edit Title
+                        </label>
+                        <input
+                            type="text"
+                            name="edit_title"
+                            value={editTitle}
+                            onChange={(e) => setEditTitle(e.target.value)}
+                            className="input input-bordered w-full"
+                        />
+                        <label className="text-xl font-bold title">
+                            Edit Announcement
+                        </label>
+                        <textarea
+                            value={editAnnouncement}
+                            onChange={(e) =>
+                                setEditAnnouncement(e.target.value)
+                            }
+                            name="edit_message"
+                            placeholder="type here"
+                            className="textarea textarea-bordered textarea-lg w-full"
+                        ></textarea>
+                        <button
+                            className="btn btn-primary w-full"
+                            type="submit"
+                        >
+                            Save Changes
+                        </button>
+                    </form>
                 </div>
             </dialog>
         </>

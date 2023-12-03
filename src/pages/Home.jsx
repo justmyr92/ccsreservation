@@ -137,7 +137,7 @@ const Home = () => {
                                 </p>
                                 <div className="flex justify-center items-center gap-2">
                                     <Link
-                                        to="/reservation/More"
+                                        to="/reservation/more"
                                         className="make-reservation-btn py-3 hover:bg-sky-800 px-4 bg-sky-700 w-fit text-lg text-white shadow-sm"
                                     >
                                         Make a reservation{" "}
@@ -164,12 +164,18 @@ const Home = () => {
                         </p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        <ServiceCard image={baptism} title="Baptism" />
-                        <ServiceCard image={wedding} title="Wedding" />
-                        <ServiceCard image={birthday} title="Birthday" />
-                        <ServiceCard image={corporate} title="Corporate" />
-                        <ServiceCard image={party} title="Party" />
-                        <ServiceCard image={party} title="More" />
+                        <ServiceCard image={baptism} title="baptismal" />
+                        <ServiceCard image={wedding} title="wedding" />
+                        <ServiceCard image={birthday} title="birthday" />
+                        <ServiceCard
+                            image={corporate}
+                            title="company's party"
+                        />
+                        <ServiceCard
+                            image={party}
+                            title="office and school party"
+                        />
+                        <ServiceCard image={party} title="more" />
                     </div>
                 </div>
             </section>

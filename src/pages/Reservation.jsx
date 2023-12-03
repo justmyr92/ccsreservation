@@ -15,7 +15,7 @@ const Reservation = () => {
     const [client, setClient] = useState([]);
     const [clientData, setClientData] = useState({});
 
-    let { event_type_param } = useParams();
+    const { event_type_param } = useParams();
 
     const [error, setError] = useState("");
 
@@ -92,6 +92,19 @@ const Reservation = () => {
     //     setAddsOnInputs(updatedInputs);
     // };
 
+    const event_types = [
+        "baptismal",
+        "wedding",
+        "birthday",
+        "company's party",
+        "office and school party",
+        "children's party",
+        "anniversary",
+        "inauguration",
+        "house warming",
+        "others",
+    ];
+
     const [fname, setFname] = useState("");
     const [lname, setLname] = useState("");
     const [email, setEmail] = useState("");
@@ -99,11 +112,12 @@ const Reservation = () => {
 
     const [eventName, setEventName] = useState("");
     const [eventType, setEventType] = useState(
-        event_type_param === "More" ? "" : event_type_param
+        event_type_param === "more" ? "" : event_type_param
     );
     const [eventDate, setEventDate] = useState("");
     const [eventTime, setEventTime] = useState("");
     const [eventVenue, setEventVenue] = useState("");
+    const [specifiedEventType, setSpecifiedEventType] = useState("");
     const [eventVenueFinal, setEventVenueFinal] = useState(true);
     const [eventTheme, setEventTheme] = useState("");
     const [eventMotif, setEventMotif] = useState("");
@@ -119,7 +133,7 @@ const Reservation = () => {
     ]);
     const [eventDateError, setEventDateError] = useState("");
 
-    useEffect(() => {}, [eventDate]);
+    useEffect(() => {}, [eventType]);
 
     const stepIncrement = () => {
         //event must be in the future
@@ -247,7 +261,7 @@ const Reservation = () => {
                 confirmButtonText: "Go to Reservations",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "/profile";
+                    window.location.href = "/user/reservations";
                 }
             });
             return;
@@ -266,7 +280,8 @@ const Reservation = () => {
             if (result.isConfirmed) {
                 const eventDetails = {
                     event_name: eventName,
-                    event_type: eventType,
+                    event_type:
+                        eventType === "Others" ? specifiedEventType : eventType,
                     event_date: eventDate,
                     event_time: eventTime,
                     event_venue: eventVenue,
@@ -546,7 +561,7 @@ const Reservation = () => {
                                         Event Information
                                     </h3>
                                     <div className="grid grid-cols-6 gap-4">
-                                        <div className="form-control w-full col-span-3">
+                                        <div className="form-control w-full col-span-2">
                                             <label className="label">
                                                 <span className="label-text">
                                                     Event Name
@@ -568,18 +583,16 @@ const Reservation = () => {
                                             />
                                         </div>
 
-                                        <div className="form-control w-full col-span-3">
+                                        <div className="form-control w-full col-span-2">
                                             <label className="label">
                                                 <span className="label-text">
                                                     Event Type
                                                 </span>
                                             </label>
-                                            <input
-                                                type="text"
-                                                placeholder="Event Type"
-                                                className={`input input-bordered w-full focus:outline-none outline-none ${
+                                            <select
+                                                className={`select select-bordered w-full focus:outline-none outline-none capitalize ${
                                                     error && eventType === ""
-                                                        ? "input-error"
+                                                        ? "select-error"
                                                         : ""
                                                 }`}
                                                 name="eventType"
@@ -587,6 +600,49 @@ const Reservation = () => {
                                                 onChange={(e) =>
                                                     setEventType(e.target.value)
                                                 }
+                                            >
+                                                <option value="" disabled>
+                                                    Select an event type
+                                                </option>
+                                                {event_types.map(
+                                                    (type, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={type}
+                                                        >
+                                                            {type}
+                                                        </option>
+                                                    )
+                                                )}
+                                            </select>
+                                        </div>
+
+                                        <div className="form-control w-full col-span-2">
+                                            <label className="label">
+                                                <span className="label-text">
+                                                    If other's, please specify
+                                                </span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Specify Event Type"
+                                                className={`input input-bordered w-full focus:outline-none outline-none ${
+                                                    error &&
+                                                    eventType === "others" &&
+                                                    specifiedEventType === ""
+                                                        ? "input-error"
+                                                        : ""
+                                                }`}
+                                                name="specifiedEventType"
+                                                value={specifiedEventType}
+                                                onChange={(e) =>
+                                                    setSpecifiedEventType(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                disabled={
+                                                    eventType !== "others"
+                                                } // Disable the input field unless "others" is selected
                                             />
                                         </div>
 

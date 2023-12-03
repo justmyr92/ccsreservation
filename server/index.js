@@ -96,6 +96,8 @@ app.post("/staff", async (req, res) => {
         role_id,
     } = req.body;
 
+    console.log(req.body);
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(staff_password, salt);
 
@@ -187,6 +189,45 @@ app.post("/register", async (req, res) => {
     } catch (error) {
         console.error("Error registering client", error);
         res.status(500).json({ error: "An unexpected error occurred" });
+    }
+});
+
+app.patch("/announcements/:announcement_id", async (req, res) => {
+    try {
+        const { announcement_id } = req.params;
+        const { title, announcement_message } = req.body;
+
+        const result = await pool.query(
+            "UPDATE announcements SET title = $1, announcement_message = $2 WHERE announcement_id = $3 RETURNING *",
+            [title, announcement_message, announcement_id]
+        );
+
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.delete("/announcements/:announcement_id", async (req, res) => {
+    try {
+        const { announcement_id } = req.params;
+
+        const result = await pool.query(
+            "DELETE FROM announcements WHERE announcement_id = $1",
+            [announcement_id]
+        );
+
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

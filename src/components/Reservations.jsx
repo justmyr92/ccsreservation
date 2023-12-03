@@ -238,25 +238,32 @@ const Reservations = () => {
         {
             name: "ID",
             selector: (row) => row.reservation_id,
+            width: "15%",
         },
         {
             name: "Date",
+            width: "15%",
             selector: (row) => row.event_date,
         },
         {
             name: "Reservation",
             selector: (row) => row.event_name,
+            width: "15%",
         },
         {
+            width: "15%",
             name: "Venue",
             selector: (row) => row.event_venue,
         },
         {
             name: "Status",
             selector: (row) => row.status,
+            width: "15%",
         },
         {
             name: "Action",
+            width: "25%",
+
             selector: (row) => (
                 <div className="flex gap-3">
                     {row.status === "Pending" && (
@@ -379,7 +386,7 @@ const Reservations = () => {
 
     return (
         <div className="ratings__main bg-gradient-to-r from-cyan-500 to-blue-500 w-[100%] p-6 h-[100%] overflow-y-auto">
-            <div className="container bg-white p-6 rounded-lg min-h-[100%]">
+            <div className="container bg-white p-6 rounded-lg min-h-[100%] w-[100%]">
                 {page === 1 && (
                     <>
                         <div className="flex justify-between">
@@ -388,16 +395,18 @@ const Reservations = () => {
                             </h3>
                         </div>
                         <hr className="my-2 border-gray-400" />
-                        <DataTable
-                            columns={column}
-                            data={reservations}
-                            pagination={true}
-                            noHeader={true}
-                            fixedHeader={true}
-                            fixedHeaderScrollHeight="600px"
-                            highlightOnHover={true}
-                            striped={true}
-                        />
+                        <div className="box overflow-x-auto w-full border">
+                            <DataTable
+                                columns={column}
+                                data={reservations}
+                                pagination={true}
+                                noHeader={true}
+                                fixedHeader={true}
+                                fixedHeaderScrollHeight="600px"
+                                highlightOnHover={true}
+                                striped={true}
+                            />
+                        </div>
                     </>
                 )}
                 {page === 2 && (

@@ -13,7 +13,7 @@ const ServiceCard = ({ image, title }) => {
                 <div className="overlay absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 rounded-lg flex justify-center items-center hover:bg-opacity-0  hover:text-orange-500">
                     <div className="overlay-content text-center text-white">
                         <h3
-                            className="text-4xl font-bold mb-2 title tracking-widest"
+                            className="text-4xl font-bold mb-2 title tracking-widest capitalize"
                             style={{ textShadow: "0 0 5px #000000" }}
                         >
                             {title}
