@@ -84,19 +84,31 @@ const Reservations = () => {
                 if (res.ok) {
                     setReservations(data);
                     data.map(async (reservation) => {
-                        let result = await fetch(
-                            `http://localhost:7723/ratings/${reservation.reservation_id}`
-                        );
-                        const f = await result.json();
-                        let new_data = {
-                            reservation_id: reservation.reservation_id,
-                            count: f.count,
-                        };
-                        console.log(f.count, "asd");
-                        setRatingCount((ratingCount) => [
-                            ...ratingCount,
-                            new_data,
-                        ]);
+                        try {
+                            let result = await fetch(
+                                `http://localhost:7723/ratings/${reservation.reservation_id}`
+                            );
+
+                            if (result.ok) {
+                                const f = await result.json();
+                                console.log(f);
+                                let new_data = {
+                                    reservation_id: reservation.reservation_id,
+                                    count: f,
+                                };
+                                console.log(f, "asd");
+                                setRatingCount((ratingCount) => [
+                                    ...ratingCount,
+                                    new_data,
+                                ]);
+                            } else {
+                                console.error(
+                                    `Error fetching data for reservation ${reservation.reservation_id}`
+                                );
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        }
                     });
                 }
             } catch (error) {
@@ -264,7 +276,7 @@ const Reservations = () => {
             name: "Action",
             width: "25%",
 
-            selector: (row) => (
+            selector: (row, index) => (
                 <div className="flex gap-3">
                     {row.status === "Pending" && (
                         <button
@@ -300,7 +312,10 @@ const Reservations = () => {
                     <>
                         <button
                             className="btn bg-green-500 text-white btn-sm"
-                            disabled={row.status !== "Completed"}
+                            disabled={
+                                row.status !== "Completed" ||
+                                ratingCount[index] !== 0
+                            }
                             onClick={() => viewRatings(row)}
                         >
                             <FontAwesomeIcon icon={faStar} />

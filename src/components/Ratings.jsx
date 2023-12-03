@@ -68,10 +68,6 @@ const Ratings = ({ clientData }) => {
             selector: (row) => row.event_date,
         },
         {
-            name: "Reservation Date",
-            selector: (row) => row.reservation_date,
-        },
-        {
             name: "Rate",
             selector: (row) => row.rating_value,
         },

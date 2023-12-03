@@ -17,6 +17,8 @@ const Announcement = () => {
         } else {
             if (roleID === "ROLE001") {
                 window.location.href = "/";
+            } else if (roleID === "ROLE002") {
+                window.location.href = "/menu";
             }
         }
     }, []);
@@ -250,75 +252,6 @@ const Announcement = () => {
         setReload(false);
     }, [search, reload]);
 
-    // const sendEmail = async (e) => {
-    //     e.preventDefault();
-
-    //     // Loop through clients
-    //     // Loop through clients
-    //     for (const client of clients) {
-    //         // Set the values for the current client
-    //         form.current["to_name"].value = client.client_fname;
-    //         form.current["to_email"].value = client.client_email;
-    //         form.current["announcement_date_posted"].value =
-    //             new Date().toLocaleDateString();
-
-    //         // Log the values for the current client
-    //         console.log("to_name:", form.current["to_name"].value);
-    //         console.log("to_email:", form.current["to_email"].value);
-    //         console.log(
-    //             "announcement_date_posted:",
-    //             form.current["announcement_date_posted"].value
-    //         );
-
-    //         try {
-    //             // Send the email for the current client
-    //             const result = await emailjs.sendForm(
-    //                 "service_a4n0u6e", //
-    //                 "template_xag31xl",
-    //                 form.current,
-    //                 "gqPl6Tqkq5adomnIU"
-    //             );
-
-    //             console.log(result.text);
-    //             console.log("Message sent to", client.client_email);
-    //         } catch (error) {
-    //             console.error(error.text);
-    //         }
-    //     }
-
-    //     const announcement_id = "ANN" + Math.floor(Math.random() * 9000 + 1000);
-    //     const title = form.current["announcement_title"].value;
-    //     const announcement_message = form.current["message"].value;
-    //     const announcement_date = new Date();
-
-    //     const insertAnnouncement = async () => {
-    //         try {
-    //             const response = await fetch(
-    //                 "http://localhost:7723/announcements",
-    //                 {
-    //                     method: "POST",
-    //                     headers: { "Content-Type": "application/json" },
-    //                     body: JSON.stringify({
-    //                         announcement_id,
-    //                         title,
-    //                         announcement_message,
-    //                         announcement_date,
-    //                     }),
-    //                 }
-    //             );
-    //             const result = await response.json();
-    //             console.log(result);
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     };
-
-    //     insertAnnouncement();
-
-    //     // Close the modal after sending emails
-    //     document.getElementById("my_modal_4").close();
-    // };
-
     const sendEmail = async (e) => {
         e.preventDefault();
 
@@ -393,6 +326,8 @@ const Announcement = () => {
 
         // Hide loading spinner or reset loading state
         setLoading(false);
+
+        setReload(true);
     };
 
     return (

@@ -92,6 +92,8 @@ const Staff = () => {
         } else {
             if (roleID === "ROLE001") {
                 window.location.href = "/";
+            } else if (roleID === "ROLE002") {
+                window.location.href = "/menu";
             }
         }
     }, []);

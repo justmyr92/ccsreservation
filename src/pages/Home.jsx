@@ -54,6 +54,16 @@ const Home = () => {
         localStorage.getItem("userID")
     );
 
+    const [announcements, setAnnouncements] = useState([
+        {
+            announcement_id: "ANN4303",
+            title: "This is a test email, last attempt",
+            announcement_message:
+                "This is a test email for thesis, please ignore. Thank youa",
+            announcement_date: "2023-11-28T16:00:00.000Z",
+        },
+    ]);
+
     const [clientData, setClientData] = useState({});
 
     useEffect(() => {
@@ -75,6 +85,23 @@ const Home = () => {
         if (roleID === "ROLE001") {
             fetchClientData();
         }
+
+        const fetchAnnouncements = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:7723/announcements"
+                );
+                const result = await response.json();
+                if (result.length > 0) {
+                    setAnnouncements(result);
+                    document.getElementById("my_modal_3").showModal();
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchAnnouncements();
     }, []);
 
     useEffect(() => {
@@ -101,6 +128,48 @@ const Home = () => {
 
     return (
         <>
+            <dialog id="my_modal_3" className="modal">
+                <div className="modal-box">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button
+                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        onClick={() =>
+                            document.getElementById("my_modal_3").close()
+                        }
+                    >
+                        ✕
+                    </button>
+
+                    <h3 className="font-bold text-lg">Announcement!</h3>
+                    <p className="text-sm">
+                        Press ESC key or click on ✕ button to close
+                    </p>
+                    <hr className="border-1 border-gray-300 my-4" />
+                    {announcements.map((announcement, index) => (
+                        <div
+                            className="flex flex-col items-start justify-center"
+                            key={index}
+                        >
+                            <h3 className="font-bold text-lg">
+                                {announcement.title}
+                            </h3>
+                            <p className="text-sm">
+                                {announcement.announcement_message}
+                            </p>
+                            <p className="text-sm">
+                                {new Date(
+                                    announcement.announcement_date
+                                ).toLocaleDateString("en-US", {
+                                    weekday: "long",
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </dialog>
             <Navbar clientData={clientData} />
             {/* Hero Section */}
             <section

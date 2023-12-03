@@ -868,16 +868,17 @@ app.get("/ratings/:reservation_id", async (req, res) => {
     try {
         const { reservation_id } = req.params;
         const result = await pool.query(
-            "SELECT count(*) FROM rating_table WHERE reservation_id = $1",
+            "SELECT COUNT(*) FROM rating_table WHERE reservation_id = $1",
             [reservation_id]
         );
-        console.log(result, reservation_id);
-        res.json(result.rows[0]);
+        console.log(result.rows[0].count); // Corrected line
+        res.json(result.rows[0].count);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
 });
+
 app.post("/ratings", async (req, res) => {
     try {
         const { rating_id, rating_value, rating_comment, reservation_id } =
@@ -939,6 +940,18 @@ app.get("/client_count", async (req, res) => {
     try {
         const result = await pool.query("SELECT COUNT(*) FROM client_table");
         res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+//get all announcements
+app.get("/announcements", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM announcements");
+        console.log(result);
+        res.json(result.rows);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");

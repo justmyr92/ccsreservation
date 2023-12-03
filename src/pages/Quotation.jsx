@@ -304,49 +304,45 @@ const Quotation = () => {
                             }
                             {addsOn && (
                                 <tr>
-                                    <th className="title text-xl font-bold">
+                                    <th
+                                        className="title text-xl font-bold"
+                                        colSpan={2}
+                                    >
                                         Adds On:
                                     </th>
                                 </tr>
                             )}
                             {addsOn &&
                                 addsOn.map((add, index) => (
-                                    <tr>
-                                        <td>
-                                            {index +
-                                                1 +
-                                                ". " +
-                                                add.adds_on_name}
-                                        </td>
+                                    <tr key={index}>
+                                        <td colSpan={2}>{add.adds_on_name}</td>
                                     </tr>
                                 ))}
 
-                            {
-                                foods && (
-                                    <tr>
-                                        <th className="title text-xl font-bold">
-                                            Foods:
-                                        </th>
-                                    </tr>
-                                ) //food
-                            }
+                            {foods && (
+                                <tr>
+                                    <th
+                                        className="title text-xl font-bold"
+                                        colSpan={2}
+                                    >
+                                        Foods:
+                                    </th>
+                                </tr>
+                            )}
 
                             {foods &&
-                                foods.map((food) => (
-                                    <tr>
-                                        {/* map reserved foods * and compare to food.food_id * an prnit food.food_name */}
+                                foods.map((food, foodIndex) => (
+                                    <tr key={food.food_id}>
+                                        {/* map reserved foods * and compare to food.food_id * and print food.food_name */}
                                         {reservedFoods &&
                                             reservedFoods.map(
-                                                (reservedFood, index) =>
+                                                (reservedFood, reservedIndex) =>
                                                     reservedFood.food_id ===
-                                                        food.food_id && (
-                                                        <td>
-                                                            {index +
-                                                                1 +
-                                                                ". " +
-                                                                food.food_name}
+                                                    food.food_id ? (
+                                                        <td colSpan={2}>
+                                                            {food.food_name}
                                                         </td>
-                                                    )
+                                                    ) : null
                                             )}
                                     </tr>
                                 ))}
