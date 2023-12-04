@@ -38,10 +38,10 @@ ALTER TABLE public.adds_on_table OWNER TO postgres;
 --
 
 CREATE TABLE public.announcements (
-    id character varying(50) NOT NULL,
+    announcement_id character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
-    message text NOT NULL,
-    expiration_date date NOT NULL
+    announcement_message text NOT NULL,
+    announcement_date date
 );
 
 
@@ -126,9 +126,8 @@ ALTER TABLE public.food_table OWNER TO postgres;
 CREATE TABLE public.rating_table (
     rating_id character varying(25) NOT NULL,
     rating_value integer,
-    rating_comment character varying(50),
-    reservation_id character varying(25),
-    rating_date date
+    rating_comment text,
+    reservation_id character varying(25)
 );
 
 
@@ -160,8 +159,8 @@ CREATE TABLE public.reservation_table (
     client_lname character varying(25),
     client_email character varying(50),
     client_contact character varying(50),
-    status character varying(50),
-    proposal character varying
+    status character varying(30),
+    proposal character varying(255)
 );
 
 
@@ -242,6 +241,26 @@ AO_389u1gvin	Lobo	RS_395njupi6
 AO_gv7anocj8	Dove	RS_395njupi6
 AO_r9xhx8ahd	extra tables	RS_g30j2n7ne
 AO_7c864tmv1	name standee	RS_g30j2n7ne
+AO_wxca3hy22	Scaffold	RS_wrqeacq8j
+AO_nvgb7xssy	chairs	RS_wrqeacq8j
+AO_yeyqj89l4	Clown	RS868195
+AO_l35kmht3l	Hair & Make up	RS868195
+AO_dy3kqg6n3	Invitations	RS868195
+AO_iek5etusk	Sounds & Lights (On the day)	RS846376
+AO_uqnqqtrgf	Scaffold	RS846376
+AO_shcxieu74	Clown	RS846376
+AO_fofgjij6l	Hair & Make up	RS846376
+AO_j4knjklms	Flower Bouquet	RS846376
+AO_x1gp4ixo1	Sounds & Lights (On the day)	RS255760
+AO_5oai7ep2x	Lechon	RS255760
+AO_gqzj5855m	Cake	RS255760
+AO_76ud8rr82	Clown	RS255760
+AO_a2j1x74mf	Hair & Make up	RS255760
+AO_m8zi09jvn	Host	RS255760
+AO_8zcmfif05	Flower Bouquet	RS255760
+AO_69b31s2g7	Give-Away	RS255760
+AO_ygvi7a8cm	Coordinator	RS255760
+AO_vwnd24tgi	Invitations	RS255760
 \.
 
 
@@ -249,7 +268,9 @@ AO_7c864tmv1	name standee	RS_g30j2n7ne
 -- Data for Name: announcements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.announcements (id, title, message, expiration_date) FROM stdin;
+COPY public.announcements (announcement_id, title, announcement_message, announcement_date) FROM stdin;
+ANN5292	aaaa	asd	2023-12-03
+ANN7475	123123	123123	2023-12-03
 \.
 
 
@@ -261,6 +282,7 @@ COPY public.client_table (client_id, client_fname, client_lname, client_email, c
 CL_irs17tzk0	Charlene Gale	Almario	c.almario@example.com	09123456789	Bauan - Mabini Rd.	San Pedro	Bauan	$2b$10$mpdx3uvlUkDDiPmY0wOavu603p6O486CFlFQoaGHvwra4nlePxeAW	ROLE001
 CL_jhqoso9pg	jane	doe	janedoe@gmail.com	09123457689	Ubelt	San Pedro	Bauan	$2b$10$SR03OljeeDftDlhh85prvu1W8dY0UoHzu2tKoTn.hqRQyNLiurpLG	ROLE001
 CL_7umnfatof	Gale	Largado	gale.largado@gmail.com	09991849714	Ibaba	San Pedro	Bauan	$2b$10$pyHzW9WGBi/8rWuHeUf6R.4wFwVAGv25l26rLdF25cNeoLKKHiiYu	ROLE003
+CL_ak113xmia	Raizhell Ann	Quijano	raizhellann@gmail.com	09092484177	Ibaba	San Pedro	Bauan	$2b$10$ZYDIMUJun6BNDrHjlswkLeR4hvNyTUbO52v25yXBAy5FkXOyZbwHW	ROLE001
 CL_sesoiimbn	Charlene Gale	Largado	charlenegale01@gmail.com	09991849712	Ibaba	San Pedro	Bauan	$2b$10$KLjWkKIBEr.fokC9fNRqne6wFRhIVJ3n1OoOKz0b.JJjq2Tx7Gy6q	ROLE001
 CL_eifkfmnfr	Mark Andrew	Almario	mrkndrw515@gmail.com	09155437979	A. Magnaye	P. Niogan	Mabini	$2b$10$ZxALFKRbxPMLBUl738VaXOXXkrmdWCGk8xddB4Br6fR/NtlGA.wAO	ROLE001
 CL_m5tc8603a	Allainer	Reyes	allainerlreyes@gmail.com	09634026624	Lalao	Anilao East	Mabini	$2b$10$zGVDVbOc0dNJfN0LU/OXWOZg1WbU/VAuVNaCuYi4iAN5n4q/8MKy.	ROLE001
@@ -275,10 +297,9 @@ CL_ok6em7k5z	Lhudymuel	Abe	lhudymuel@gmail.com	09369813607	Ligaan	Gasang	Mabini	
 CL_0gu5jcsxw	Marizchelle	Magtibay	marizchellem@gmail.com	09167098047	Malaya	Estrella	Mabini	$2b$10$g3zTCqEcd7aeUZCvr9wAFunniXIgDrtNQejpauGalm1j2PM3GKH8.	ROLE001
 CL_gnkhs1kyt	Ray	Bantugon	rbantugon3@gmail.com	09291299452	South Balanga	Saguing	Mabini	$2b$10$BVu4ZHZMT4wHpz.M/UbmlOkx6ltgAoW/JTxeFUSLWW25bSMDsxqNG	ROLE001
 CL_n66awg9yf	Ammie Joy	Mallada	ammiejoymallada01@gmail.com	09502354399	Gaac	Calamias	Mabini	$2b$10$/22P6zpy.Gx88Yt11G9PNeoLlrbZknASMdjypoFDaYJDuCDBznxJ2	ROLE001
-CL508059100000	jhghjgh	hfgfg	mark@gmail.com	09717515242	657567	53543453aA	5665456	$2b$10$6bmJCV7c3lJDZL1RrORJPO4.AyiPT6JNmbohn4EpCNNEknp8gOSNS	ROLE001
-CL_ak113xmia	Raizhell Ann	Quijano	raizhellann@gmail.com	09092484177	Ibaba	San Pedro	Bauan	$2b$10$ZYDIMUJun6BNDrHjlswkLeR4hvNyTUbO52v25yXBAy5FkXOyZbwHW	ROLE001
-CL768440100000	Testing	Gutierrez	justmyrgutierrez92@gmail.com	09182371651	jaskdajdh	sadasdas	kjhkj	$2b$10$ysJb8XCSkTh4vL2gWiDhFewJnTU7y/dMIWmD4l.VvMvAAIQ6nbuGW	ROLE001
-CL278807100000	Justmyr	Gutierrez	justmyrgutierrez21@gmail.com	09123617182	justmyrgutierrez21@gmail.com	justmyrgutierrez21@gmail.com	Justmyrgutierrez21	$2b$10$aT7uFdJ0MMzxyZcOILJweOgu0TiwvxKr6b3/VFYaSvc.02cx8ICzy	ROLE001
+CL874494100000	Justmyr	Gutierrez	justmyrd.gutierrez@gmail.com	09271262515	asd	asd	s	$2b$10$DaW3vJttY.dnVuOw4maI5O8GMMzrcctmxV.ku/TLow64wVuh71JEe	ROLE001
+CL519359100000	Justmine	Odessa	justmyrgutierrez1@gmail.com	09728271526	Blk 16 Lot 8	Balete Relocation Site	Batangas City	$2b$10$DWrzquMx8cjJ57YAwJvjmuuhjPh4yoLNFwDBB3hJRZEn/sy6.08IK	ROLE001
+CL726201100000	Justmyr	Gutierrez	justmyrgutierrez92@gmail.com	09781272152	Bauan - Mabini Rd.	San Pedro	Bauan	$2b$10$pUdKet3pGmufea27ebQ6KesazVWHqNPIvzv2Wj1uP2bz7qqe2sjra	ROLE001
 \.
 
 
@@ -304,9 +325,14 @@ EV_eerkjuxt9	2st Anniversary	Anniversary	2024-02-14	18:07:00	San Pedro	true	Marr
 EV_wf0uksasn	3st Anniversary	Anniversary	2024-02-14	18:07:00	San Pedro	true	Marriage	White and Blue	12
 EV_vqmb824ma	3st Anniversary	Anniversary	2024-02-14	18:07:00	San Pedro	true	Marriage	White and Blue	12
 EV_q9x4d937p	Thalia @ 2	2st Birthday	2023-11-24	15:30:00	San Pedro, Bauan, Batangas	true	Faires	Pastel Colors	150
-EV_m2sjcyobc	qeqwe	Birthday	2023-03-12	00:03:00	qweqwe	true	qweqwe	qwe	123123
-EV_89ehylqwr	Malaya	Wedding	2023-11-30	05:13:00	1231	true	123	123123	23
-EV_ixuskd7nb	1st Anniversary	Kasalan	2023-11-30	14:25:00	Batangas city	true	23123	12312	51
+EV_9inv06hjj	Ellie's Christening	Christening/Baptism	2023-11-28	11:30:00	Sittio Gaak, Brgy. Calamias, Mabini, Batangas	true	Angel	White and pink	150
+EV_00qi3zlkc	Thalia @ 2	2nd Birthday	2024-10-14	15:00:00	San Pedro Ibaba, Bauan, Batangas	true	Faires	Pastel Colors	200
+EV_2nay95oiq	Janneth @ 45	Birthday	2024-05-24	12:00:00	Brgy. La Mesa, Calamba, Laguna	true	Golden	Black and gold	50
+EV_rqbfdplvr	Gale @ 7	Birthday	2024-10-01	15:00:00	Sittio Mailayin, Brgy. P. Niogan, Mabini, Batangas	true	Barbie	Pastel Colors	200
+EV_o2rje9ywh	22nd Birthday	Birthday	2023-12-30	08:00:00	Batangas city	true	Simple	Elegant	120
+EV_y8p44sn6o	1	others	2023-12-12	21:48:00	2	true	1	3	3
+EV_fyhskk8hf	Malaya	birthday	2023-12-21	09:21:00	Batangas city	true	23	1111	-1123
+EV_itgx9jvrw	Malaya	birthday	2023-12-21	09:21:00	Batangas city	true	23	1111	-1123
 \.
 
 
@@ -315,9 +341,50 @@ EV_ixuskd7nb	1st Anniversary	Kasalan	2023-11-30	14:25:00	Batangas city	true	2312
 --
 
 COPY public.food_table (food_id, food_name, food_type, food_price, food_description, food_image) FROM stdin;
+FD_3nxgsp9tz	Mixed Fresh Fruits	Dessert	59.00		../src/assets/foods/1700293268052-food_image.jpg
+FD_jpolt6lye	Mango Jelly	Dessert	59.00		../src/assets/foods/1700293371502-food_image.jpg
+FD_lpen7pocw	Dessert Bar 	Dessert	59.00		../src/assets/foods/1700293559558-food_image.jpg
 FD_xupe8qvkr	Fried Chicken	Chicken	79.00	Love ko 'to!	../src/assets/foods/1700233163969-food_image.jpg
-FD_g99wy0j8b	Mixed Vegetables	Appetizers	109.00	Healthier	../src/assets/foods/1700233345962-food_image.jpg
-FD_bswknv4m9	Fruit Salad	Dessert	59.00		../src/assets/foods/1700233521027-food_image.png
+FD_nyva1ew66	Chicken Macaroni Salad	Appetizers	99.00	A hearty and delicious side dish.	../src/assets/foods/1700539413640-food_image.jpg
+FD_ldq6t3pt0	Corn Soup 	Soup	100.00	 A seasonal way to enjoy fresh corn.	../src/assets/foods/1700543748637-food_image.png
+FD_f8wlqpp23	Pumpkin Soup 	Soup	150.00	Usually 'bound' soup made from a purée of pumpkin.	../src/assets/foods/1700543909459-food_image.png
+FD_jpep5iwbg	Mushroom Soup 	Soup	150.00	Roux is thinned with cream and then mushrooms	../src/assets/foods/1700543997237-food_image.png
+FD_z4mdb95sv	Garden Salad with Thousand Island	Appetizers	149.00	Completely customizable depending on the season.	../src/assets/foods/1700541811301-food_image.jpg
+FD_f16dtbzzu	Macaroni Soup 	Soup	150.00		../src/assets/foods/1700544207719-food_image.png
+FD_qymguwxuk	Cream of Chicken 	Soup	150.00		../src/assets/foods/1700544243652-food_image.png
+FD_sxmqsvdy4	Clear Vegetable 	Soup	100.00		../src/assets/foods/1700544276830-food_image.png
+FD_5g363ddwe	Cream of Vegetable 	Soup	120.00		../src/assets/foods/1700544309186-food_image.png
+FD_7qyav9f76	Carrots Soup 	Soup	120.00		../src/assets/foods/1700547690981-food_image.png
+FD_vtbuyvxph	Cream of Broccoli 	Soup	150.00		../src/assets/foods/1700547782632-food_image.png
+FD_5ajjz1ehf	Potato Soup 	Soup	120.00		../src/assets/foods/1700547997132-food_image.png
+FD_1634o4eqc	Italian Minestrone 	Soup	150.00		../src/assets/foods/1700548088268-food_image.png
+FD_haspa83ke	Cream of Asparagus 	Soup	130.00		../src/assets/foods/1700548129085-food_image.png
+FD_p3azc5iw7	Cream of Onion Soup 	Soup	130.00		../src/assets/foods/1700548157920-food_image.png
+FD_xe22ijl6m	Tomato Soup 	Soup	150.00		../src/assets/foods/1700548038926-food_image.png
+FD_a6z2ar941	Szechuan Style Pork	Pork	500.00		../src/assets/foods/1700550633587-food_image.jpg
+FD_m3bkss9qo	Pork Chop Zingara	Pork	500.00		../src/assets/foods/1700550659735-food_image.JPG
+FD_85kc3hog0	Roast Steak Mushroom Sauce	Pork	520.00		../src/assets/foods/1700550688675-food_image.jpg
+FD_ef4vdx8a4	Pork Stew with Vegetables	Pork	550.00		../src/assets/foods/1700550716732-food_image.jpg
+FD_us1rdcrfh	Pork BBQ Liempo	Pork	520.00		../src/assets/foods/1700550753761-food_image.jpg
+FD_wvsunv7xm	Sweet Sour Pork	Pork	545.00		../src/assets/foods/1700550783782-food_image.jpg
+FD_66d1gambt	Pork Cordon Bleu	Pork	350.00		../src/assets/foods/1700550807421-food_image.jpg
+FD_xnmgi0lyk	Pork Hamonado	Pork	450.00		../src/assets/foods/1700550841966-food_image.jpg
+FD_u9tuneaji	Pork BBQ Tenderloin with Sauce	Pork	550.00		../src/assets/foods/1700550866643-food_image.jpg
+FD_sbqnde1r3	Pork Teriyaki	Pork	550.00		../src/assets/foods/1700550891294-food_image.jpg
+FD_w6uvvx4ho	Mixed Nuts	All Guests Table (Choice of One)	280.00		../src/assets/foods/1700551102217-food_image.jpg
+FD_t5ijvatcp	Pork Tofu	Presidential Table (Add On)	450.00		../src/assets/foods/1700558996907-food_image.jpg
+FD_i9n91i052	Cereal Prawn	Presidential Table (Add On)	650.00		../src/assets/foods/1700559027142-food_image.jpg
+FD_g99wy0j8b	Mixed Vegetables	Appetizers	109.00		../src/assets/foods/1700233345962-food_image.jpg
+FD_kqy03mx0k	Chicken Potato Salad	Appetizers	145.00		../src/assets/foods/1700548261218-food_image.png
+FD_41q0zqaui	Besuto	All Guests Table (Choice of One)	250.00		../src/assets/foods/1700551045070-food_image.jpg
+FD_zcp8jncrs	Chopsuey	All Guests Table (Choice of One)	350.00		../src/assets/foods/1700551129766-food_image.jpg
+FD_klu5xr0y2	Lumpiang Sariwa	Presidential Table (Add On)	450.00		../src/assets/foods/1700559054409-food_image.jpg
+FD_8xy78l9ft	Crab Relleno	Presidential Table (Add On)	650.00		../src/assets/foods/1700559084528-food_image.jpg
+FD_6q3gs4e6j	Chicken Salted Egg	Presidential Table (Add On)	450.00		../src/assets/foods/1700559108896-food_image.jpg
+FD_41hj2s3zq	Fruit Salad	Dessert	59.00		../src/assets/foods/1700292447595-food_image.jpg
+FD_izg1kmudv	Maja Blanca	Dessert	59.00		../src/assets/foods/1700292940076-food_image.jpg
+FD_gjs99f7mc	Leche Flan	Dessert	59.00		../src/assets/foods/1700293016735-food_image.jpg
+FD_ocqetk51p	Buko Pandan	Dessert	59.00		../src/assets/foods/1700293110913-food_image.jpg
 \.
 
 
@@ -325,8 +392,8 @@ FD_bswknv4m9	Fruit Salad	Dessert	59.00		../src/assets/foods/1700233521027-food_i
 -- Data for Name: rating_table; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.rating_table (rating_id, rating_value, rating_comment, reservation_id, rating_date) FROM stdin;
-Rx67xv72hr	4	asdasdasdasdasd	RS243273	2023-11-20
+COPY public.rating_table (rating_id, rating_value, rating_comment, reservation_id) FROM stdin;
+R3no0ppetp	5	aaaaaa\nasd\nasd\nasd\nasd\nasd	RS255760
 \.
 
 
@@ -335,11 +402,54 @@ Rx67xv72hr	4	asdasdasdasdasd	RS243273	2023-11-20
 --
 
 COPY public.reservation_food_table (reservation_food_id, reservation_id, food_id) FROM stdin;
-RF_syfu4zrp5	RS243273	FD_g99wy0j8b
-RF_cl7070gzb	RS243273	FD_bswknv4m9
-RF_zvr0o771n	RS243273	FD_xupe8qvkr
-RF_9a0mukf8j	RS778288	FD_bswknv4m9
-RF_eer7268qs	RS778288	FD_g99wy0j8b
+RF_5lxng9ofc	RS_wrqeacq8j	FD_41hj2s3zq
+RF_y3531ldg6	RS_wrqeacq8j	FD_xupe8qvkr
+RF_awc3lwfe3	RS_wrqeacq8j	FD_lpen7pocw
+RF_doagyvy02	RS_wrqeacq8j	FD_g99wy0j8b
+RF_j9zf33vh2	RS_tp3mh2cpn	FD_41hj2s3zq
+RF_5ymtmh604	RS_tp3mh2cpn	FD_3nxgsp9tz
+RF_xkaf92jsb	RS_tp3mh2cpn	FD_gjs99f7mc
+RF_9vl32lck0	RS_tp3mh2cpn	FD_xupe8qvkr
+RF_5q0a2axnn	RS_kwtqz7fqr	FD_izg1kmudv
+RF_w93walyma	RS_kwtqz7fqr	FD_41hj2s3zq
+RF_omm1gong6	RS_kwtqz7fqr	FD_g99wy0j8b
+RF_qbyu2ikik	RS_i15l9s3iv	FD_41hj2s3zq
+RF_e8l6qlit8	RS_i15l9s3iv	FD_g99wy0j8b
+RF_vj419vcl2	RS_i15l9s3iv	FD_izg1kmudv
+RF_ppjrjuj6r	RS868195	FD_nyva1ew66
+RF_2ksvt2vic	RS868195	FD_z4mdb95sv
+RF_pfsknk7aa	RS868195	FD_g99wy0j8b
+RF_k9x7shmo6	RS868195	FD_w6uvvx4ho
+RF_rb3sm35qi	RS868195	FD_41q0zqaui
+RF_dzuc4begj	RS868195	FD_zcp8jncrs
+RF_g8ptv282z	RS868195	FD_6q3gs4e6j
+RF_ymhe77dim	RS868195	FD_t5ijvatcp
+RF_za9ioiz9o	RS868195	FD_i9n91i052
+RF_5pgvpa0ku	RS846376	FD_izg1kmudv
+RF_127pzmqfw	RS846376	FD_gjs99f7mc
+RF_rvybaepht	RS846376	FD_41hj2s3zq
+RF_iqvqqwlbq	RS846376	FD_jpep5iwbg
+RF_w5hpgwqoi	RS846376	FD_f8wlqpp23
+RF_k53doda7x	RS846376	FD_ldq6t3pt0
+RF_9x0yiej7y	RS846376	FD_qymguwxuk
+RF_ysvjm3it1	RS846376	FD_sxmqsvdy4
+RF_fxe1ovxos	RS846376	FD_vtbuyvxph
+RF_hv8tuej9t	RS846376	FD_7qyav9f76
+RF_6wrwovzje	RS846376	FD_5g363ddwe
+RF_3ryu7ppy2	RS846376	FD_5ajjz1ehf
+RF_cqu3zdo76	RS846376	FD_1634o4eqc
+RF_w8n6h3vbr	RS846376	FD_haspa83ke
+RF_xdp7mgvkh	RS846376	FD_xe22ijl6m
+RF_6x1lvowbq	RS846376	FD_p3azc5iw7
+RF_skdgdiu65	RS255760	FD_jpolt6lye
+RF_i4x34eux0	RS255760	FD_lpen7pocw
+RF_7btkj9fnn	RS255760	FD_3nxgsp9tz
+RF_ivyfjue4k	RS255760	FD_nyva1ew66
+RF_laya3rypx	RS255760	FD_xupe8qvkr
+RF_m2n8gsmyl	RS255760	FD_ldq6t3pt0
+RF_zkkq8wlai	RS255760	FD_sxmqsvdy4
+RF_dzeafk83h	RS255760	FD_qymguwxuk
+RF_ac8b9n1dp	RS255760	FD_f16dtbzzu
 \.
 
 
@@ -348,15 +458,20 @@ RF_eer7268qs	RS778288	FD_g99wy0j8b
 --
 
 COPY public.reservation_table (reservation_id, client_id, event_id, total_price, client_fname, client_lname, client_email, client_contact, status, proposal) FROM stdin;
-RS_uszjl98ta	CL_irs17tzk0	EV_0u9cuer2l	56000.00	Charlene Gale	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_k7eyl801q	CL_irs17tzk0	EV_cubkirhb0	56000.00	Charlene Gale	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_oeozksjv1	CL_irs17tzk0	EV_xt4zhlu7j	56000.00	Charlene Gale	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_395njupi6	CL_irs17tzk0	EV_eerkjuxt9	56000.00	Charlene Gale1	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_3na2eguky	CL_irs17tzk0	EV_wf0uksasn	56000.00	Charlene Gale1	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_z62cufxzm	CL_irs17tzk0	EV_vqmb824ma	56000.00	Charlene Gale1	Almario	c.almario1@example.com	09123456789	\N	\N
-RS_g30j2n7ne	CL_jhqoso9pg	EV_q9x4d937p	56000.00	jane	doe	janedoe@gmail.com	09123457689	\N	\N
-RS243273	CL_ak113xmia	EV_89ehylqwr	1231231.00	Raizhell Ann	Quijano	raizhellann@gmail.com	09092484177	Completed	../src/assets/foods/1700428692768-file.pdf
-RS778288	CL_ak113xmia	EV_ixuskd7nb	0.00	Raizhell Ann	Quijano	raizhellann@gmail.com	09092484177	Pending	\N
+RS_395njupi6	CL_irs17tzk0	EV_eerkjuxt9	123.00	Charlene Gale1	Almario	c.almario1@example.com	09123456789	Approve	../src/assets/foods/1701226164490-file.png
+RS_z62cufxzm	CL_irs17tzk0	EV_vqmb824ma	\N	Charlene Gale1	Almario	c.almario1@example.com	09123456789	Decline	\N
+RS846376	CL519359100000	EV_y8p44sn6o	41.00	Justmine	Odessa	justmyrgutierrez1@gmail.com	09728271526	Completed	../src/assets/foods/1701626143185-file.pdf
+RS255760	CL726201100000	EV_itgx9jvrw	51.00	Justmyr	Gutierrez	justmyrgutierrez92@gmail.com	09781272152	Completed	../src/assets/foods/1701653366949-file.pdf
+RS_uszjl98ta	CL_irs17tzk0	EV_0u9cuer2l	\N	Charlene Gale	Almario	c.almario1@example.com	09123456789	Pending	\N
+RS_oeozksjv1	CL_irs17tzk0	EV_xt4zhlu7j	\N	Charlene Gale	Almario	c.almario1@example.com	09123456789	Pending	\N
+RS_3na2eguky	CL_irs17tzk0	EV_wf0uksasn	\N	Charlene Gale1	Almario	c.almario1@example.com	09123456789	Pending	\N
+RS_k7eyl801q	CL_irs17tzk0	EV_cubkirhb0	123123.00	Charlene Gale	Almario	c.almario1@example.com	09123456789	Completed	../src/assets/foods/1700659657131-file.png
+RS868195	CL874494100000	EV_o2rje9ywh	22.00	Justmyr	Gutierrez	justmyrd.gutierrez@gmail.com	09271262515	Approve	../src/assets/foods/1701197031346-file.pdf
+RS_tp3mh2cpn	CL_sesoiimbn	EV_00qi3zlkc	\N	Charlene Gale	Largado	charlenegale01@gmail.com	09991849712	\N	\N
+RS_i15l9s3iv	CL_eifkfmnfr	EV_rqbfdplvr	\N	Mark Andrew	Almario	mrkndrw515@gmail.com	09155437979	\N	\N
+RS_kwtqz7fqr	CL_ak113xmia	EV_2nay95oiq	\N	Raizhell Ann	Quijano	raizhellann@gmail.com	09092484177	\N	\N
+RS_wrqeacq8j	CL_n66awg9yf	EV_9inv06hjj	\N	Ammie Joy	Mallada	ammiejoymallada01@gmail.com	09502354399	\N	\N
+RS_g30j2n7ne	CL_jhqoso9pg	EV_q9x4d937p	\N	jane	doe	janedoe@gmail.com	09123457689	\N	\N
 \.
 
 
@@ -395,7 +510,6 @@ SRV010	Sophia	Davis	ROLE004
 --
 
 COPY public.staff_table (staff_id, staff_fname, staff_lname, staff_email, staff_password, role_id) FROM stdin;
-STAFF002	Raizhell	Quijano	r.quijano@example.com	$2b$10$hqvyVtj.0UVHpUB2d.fefuHpF8vjD82Va1GUMStYZHc3ChIRUeRlG	ROLE002
 \.
 
 
@@ -404,15 +518,10 @@ STAFF002	Raizhell	Quijano	r.quijano@example.com	$2b$10$hqvyVtj.0UVHpUB2d.fefuHpF
 --
 
 COPY public.transaction_table (transaction_id, transaction_date, transaction_time, transaction_total, transaction_status, transaction_type, transaction_payment, reservation_id) FROM stdin;
-vs2zm8nh7	2023-11-19	21:31:27	1231231.00	Completed	Over the Counter	23	RS243273
-c6l8ao9n5	2023-11-19	21:48:48	1231231.00	Completed	Over the Counter	1231231.00	RS243273
-zpfyo5kxd	2023-11-19	21:50:27	1231231.00	Completed	Over the Counter	1231231.00	RS243273
-8ud416a3m	2023-11-19	21:51:42	1231231.00	Completed	Over the Counter	1231231.00	RS243273
-emgdxk4k2	2023-11-19	21:55:38	1231231.00	Completed	Over the Counter	1231231.00	RS243273
-5yd89nn2c	2023-11-19	21:56:59	1231231.00	Completed	Over the Counter	01231231.00	RS243273
-apx9fnqfn	2023-11-19	21:59:13	1231231.00	Completed	Over the Counter	1231231.00	RS243273
-ei07ppfiy	2023-11-19	22:00:50	1231231.00	Completed	Over the Counter	123123123	RS243273
-xnctjkh6m	2023-11-19	22:03:01	1231231.00	Completed	Over the Counter	1231231.00	RS243273
+n25trv6k5	2023-11-22	13:06:35	56000.00	Completed	Over the Counter	56000	RS_i15l9s3iv
+ezas12wuu	2023-11-22	13:27:45	123123.00	Completed	Over the Counter	123	RS_k7eyl801q
+oy6iyu3p3	2023-12-03	17:55:55	41.00	Completed	Over the Counter	41	RS846376
+ojyejkvca	2023-12-04	01:29:44	51.00	Completed	Over the Counter	51	RS255760
 \.
 
 
@@ -429,7 +538,7 @@ ALTER TABLE ONLY public.adds_on_table
 --
 
 ALTER TABLE ONLY public.announcements
-    ADD CONSTRAINT announcements_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT announcements_pkey PRIMARY KEY (announcement_id);
 
 
 --

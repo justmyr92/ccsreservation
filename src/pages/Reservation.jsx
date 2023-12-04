@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar";
 import Swal from "sweetalert2";
+import emailjs from "@emailjs/browser";
 
 const Reservation = () => {
     const [foods, setFoods] = useState([]);
@@ -327,6 +328,46 @@ const Reservation = () => {
                     const reservationData = await reservationResponse.json();
 
                     if (reservationResponse.ok) {
+                        //send email to admin
+                        const emailDetails = {
+                            from_email: email,
+                            to_name: "Admin",
+                            message: `You have a new reservation with the following details: \n
+                            ID : ${reservationData.reservation_id} \n
+                            Name: ${fname} ${lname} \n
+                            Email: ${email} \n
+                            Contact: ${contact} \n
+                            Event Name: ${eventName} \n
+                            Event Type: ${eventType} \n
+                            Event Date: ${eventDate} \n
+                            Event Time: ${eventTime} \n
+                            Event Venue: ${eventVenue} \n
+                            Event Theme: ${eventTheme} \n
+                            Please check your reservations for more details.`,
+                        };
+
+                        const sendEmail = (e) => {
+                            e.preventDefault();
+
+                            emailjs
+                                .send(
+                                    "service_a4n0u6e",
+                                    "template_s33vriw",
+                                    emailDetails,
+                                    "gqPl6Tqkq5adomnIU"
+                                )
+                                .then(
+                                    (result) => {
+                                        console.log(result.text);
+                                    },
+                                    (error) => {
+                                        console.log(error.text);
+                                    }
+                                );
+                        };
+
+                        sendEmail(e);
+
                         for (const addOn of addsOn) {
                             if (addOn.included) {
                                 const addsOnDetails = {
@@ -387,7 +428,7 @@ const Reservation = () => {
                     confirmButtonText: "Go to Reservations",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "/profile";
+                        window.location.href = "/user/reservations";
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {

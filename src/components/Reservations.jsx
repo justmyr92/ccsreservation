@@ -72,6 +72,7 @@ const Reservations = () => {
 
     useEffect(() => {
         console.log(userID);
+
         const getReservations = async () => {
             try {
                 const res = await fetch(
@@ -83,24 +84,21 @@ const Reservations = () => {
                 const data = await res.json();
                 if (res.ok) {
                     setReservations(data);
-                    data.map(async (reservation) => {
+                    setRatingCount([]);
+
+                    // Use Promise.all to wait for all asynchronous calls to complete
+                    const ratingPromises = data.map(async (reservation) => {
                         try {
-                            let result = await fetch(
+                            const result = await fetch(
                                 `http://localhost:7723/ratings/${reservation.reservation_id}`
                             );
-
                             if (result.ok) {
-                                const f = await result.json();
-                                console.log(f);
-                                let new_data = {
+                                const ratingsData = await result.json();
+                                console.log(ratingsData);
+                                return {
                                     reservation_id: reservation.reservation_id,
-                                    count: f,
+                                    count: parseInt(ratingsData),
                                 };
-                                console.log(f, "asd");
-                                setRatingCount((ratingCount) => [
-                                    ...ratingCount,
-                                    new_data,
-                                ]);
                             } else {
                                 console.error(
                                     `Error fetching data for reservation ${reservation.reservation_id}`
@@ -110,6 +108,9 @@ const Reservations = () => {
                             console.error(error);
                         }
                     });
+
+                    const ratings = await Promise.all(ratingPromises);
+                    setRatingCount(ratings);
                 }
             } catch (error) {
                 console.error("Error fetching reservations:", error.message);
@@ -117,7 +118,7 @@ const Reservations = () => {
         };
 
         getReservations();
-    }, []);
+    }, [userID]);
 
     const [page, setPage] = useState(1);
 
@@ -128,6 +129,10 @@ const Reservations = () => {
         console.log("Reservation:", reservation);
         setPage(2);
     };
+
+    useEffect(() => {
+        console.log(ratingCount);
+    }, [ratingCount]);
 
     const viewProposal = (reservation) => {
         setSelectedReservation(reservation);
@@ -314,7 +319,11 @@ const Reservations = () => {
                             className="btn bg-green-500 text-white btn-sm"
                             disabled={
                                 row.status !== "Completed" ||
-                                ratingCount[index] !== 0
+                                ratingCount.find(
+                                    (rating) =>
+                                        rating.reservation_id ===
+                                        row.reservation_id
+                                )?.count === 1
                             }
                             onClick={() => viewRatings(row)}
                         >
@@ -322,14 +331,17 @@ const Reservations = () => {
                         </button>
                         <dialog id="my_modal_3" className="modal">
                             <div className="modal-box">
+                                {/* if there is a button in form, it will close the modal */}
+                                <button
+                                    ype="button"
+                                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                >
+                                    ✕
+                                </button>
                                 <form
                                     method="dialog"
                                     onSubmit={handleSubmitRatings}
                                 >
-                                    {/* if there is a button in form, it will close the modal */}
-                                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                                        ✕
-                                    </button>
                                     <div className="form-control">
                                         <label
                                             htmlFor="rating"
