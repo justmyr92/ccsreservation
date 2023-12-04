@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const Register = () => {
     const [client_fname, setClientFname] = useState("");
     const [client_lname, setClientLname] = useState("");
@@ -11,6 +12,8 @@ const Register = () => {
     const [client_password, setClientPassword] = useState("");
     const [confirm_password, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
 
@@ -44,6 +47,7 @@ const Register = () => {
             setError("Invalid contact number.");
             return;
         }
+
         const client = {
             client_fname,
             client_lname,
@@ -55,18 +59,35 @@ const Register = () => {
             client_password,
             role_id: "ROLE001",
         };
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You are about to register an account.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, register it!",
+            cancelButtonText: "No, cancel!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(
+                        "http://localhost:7723/register",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(client),
+                        }
+                    );
 
-        const response = await fetch("http://localhost:7723/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(client),
+                    const result = await response.json();
+
+                    if (result.user) {
+                        window.location.href = "/login";
+                    }
+                } catch (err) {
+                    setError(err.message);
+                }
+            }
         });
-
-        const result = await response.json();
-
-        if (result.user) {
-            window.location.href = "/login";
-        }
     };
 
     return (
@@ -229,7 +250,7 @@ const Register = () => {
                                     <span className="label-text">Password</span>
                                 </label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Password"
                                     className="input input-bordered w-full outline-none focus:outline-none"
                                     name="client_password"
@@ -247,7 +268,7 @@ const Register = () => {
                                     </span>
                                 </label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Confirm Password"
                                     className="input input-bordered w-full outline-none focus:outline-none"
                                     name="confirm_password"
@@ -257,6 +278,21 @@ const Register = () => {
                                         setConfirmPassword(e.target.value)
                                     }
                                 />
+                            </div>
+                            <div className="form-control w-full col-span-2">
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox checkbox-primary"
+                                        checked={showPassword}
+                                        onChange={(e) =>
+                                            setShowPassword(
+                                                e.currentTarget.checked
+                                            )
+                                        }
+                                    />
+                                    <span className="ml-2">Show Password</span>
+                                </div>
                             </div>
                             <div className="form-control mt-6 col-span-2">
                                 <button

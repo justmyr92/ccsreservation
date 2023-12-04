@@ -927,7 +927,7 @@ app.get("/ratings", async (req, res) => {
 app.get("/payment_amount", async (req, res) => {
     try {
         const result = await pool.query(
-            "SELECT SUM(transaction_total) FROM transaction_table"
+            "SELECT SUM(CAST(transaction_payment AS DECIMAL)) FROM transaction_table WHERE transaction_status IN ('Completed', 'Partial')"
         );
         res.json(result.rows[0]);
     } catch (error) {
@@ -991,10 +991,26 @@ app.get("/transaction_sum/:month", async (req, res) => {
         const year = new Date().getFullYear();
         const { month } = req.params;
         const result = await pool.query(
-            "SELECT SUM(transaction_total) FROM transaction_table WHERE EXTRACT(MONTH FROM transaction_date) = $1 AND EXTRACT(YEAR FROM transaction_date) = $2",
+            "SELECT SUM(CAST(transaction_payment AS DECIMAL)) FROM transaction_table WHERE EXTRACT(MONTH FROM transaction_date) = $1 AND EXTRACT(YEAR FROM transaction_date) = $2 AND transaction_status IN ('Completed', 'Partial')",
             [month, year]
         );
 
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+//delete food
+app.delete("/foods/:food_id", async (req, res) => {
+    try {
+        const { food_id } = req.params;
+
+        const result = await pool.query(
+            "DELETE FROM food_table WHERE food_id = $1",
+            [food_id]
+        );
         res.json(result.rows[0]);
     } catch (error) {
         console.error(error);
@@ -1130,6 +1146,23 @@ app.get("/announcements", async (req, res) => {
         const result = await pool.query("SELECT * FROM announcements");
         console.log(result);
         res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.get("/balance/:reservation_id", async (req, res) => {
+    try {
+        const { reservation_id } = req.params;
+
+        const result = await pool.query(
+            "SELECT COALESCE((SELECT total_price FROM reservation_table WHERE reservation_id = $1), 0) - COALESCE((SELECT SUM(CAST(transaction_payment AS NUMERIC)) FROM transaction_table WHERE reservation_id = $1), 0) AS balance",
+            [reservation_id]
+        );
+
+        console.log(result);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");

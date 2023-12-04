@@ -32,6 +32,9 @@ const Reservations = () => {
                 setReservations(
                     result.filter(
                         (res) =>
+                            res.reservation_id
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
                             res.client_fname
                                 .toLowerCase()
                                 .includes(search.toLowerCase()) ||

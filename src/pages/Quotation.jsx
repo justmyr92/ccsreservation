@@ -17,9 +17,38 @@ const Quotation = () => {
     const [foods, setFoods] = useState([]);
     const [reservedFoods, setReservedFoods] = useState([]);
 
+    const [balance, setBalance] = useState(0);
+
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const getBalance = async () => {
+            const response = await fetch(
+                `http://localhost:7723/balance/${reservation_id}`
+            );
+            const res = await response.json();
+
+            setBalance(res.balance);
+
+            console.log(res);
+        };
+        getBalance();
+    }, []);
+
     const { reservation_id } = useParams();
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (paymentAmount > balance) {
+            setError("Payment amount is greater than balance");
+            return;
+        }
+
+        let paymentStatus =
+            balance - paymentAmount === 0 ? "Completed" : "Partial";
+
+        let reservationStatus =
+            balance - paymentAmount === 0 ? "Completed" : "Approve";
 
         const data = {
             transaction_id: Math.random().toString(36).substr(2, 9),
@@ -53,7 +82,7 @@ const Quotation = () => {
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({ status: paymentStatus }),
+                            body: JSON.stringify({ status: reservationStatus }),
                         }
                     );
 
@@ -332,7 +361,7 @@ const Quotation = () => {
 
                             {foods &&
                                 foods.map((food, foodIndex) => (
-                                    <tr key={food.food_id}>
+                                    <tr key={foodIndex}>
                                         {/* map reserved foods * and compare to food.food_id * and print food.food_name */}
                                         {reservedFoods &&
                                             reservedFoods.map(
@@ -424,7 +453,10 @@ const Quotation = () => {
                                             <div className="form-control w-full">
                                                 <label className="label">
                                                     <span className="label-text">
-                                                        Payment Amount
+                                                        Payment Amount{" "}
+                                                        <span className="text-red-500">
+                                                            {balance} left
+                                                        </span>
                                                     </span>
                                                 </label>
                                                 <input
@@ -440,6 +472,11 @@ const Quotation = () => {
                                                         )
                                                     }
                                                 />
+                                                {error !== "" && (
+                                                    <p className="text-red-500">
+                                                        {error}
+                                                    </p>
+                                                )}
                                             </div>
                                         )}
                                         <div className="form-control w-full">

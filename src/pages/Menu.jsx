@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Menu = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
@@ -32,6 +33,38 @@ const Menu = () => {
         setUpdateFoodDescription(food.food_description);
 
         document.getElementById("update_food_modal").showModal();
+    };
+
+    const deleteFood = async (foodID) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(
+                        `http://localhost:7723/foods/${foodID}`,
+                        {
+                            method: "DELETE",
+                        }
+                    );
+
+                    const result = await response.json();
+                    if (result) {
+                        setReload(!reload);
+                        Swal.fire(
+                            "Deleted!",
+                            "Your file has been deleted.",
+                            "success"
+                        );
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        });
     };
 
     const columns = [
@@ -144,27 +177,38 @@ const Menu = () => {
         for (var pair of formData.entries()) {
             console.log(pair[0] + ", " + pair[1]);
         }
+        document.getElementById("add_food_modal").close();
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(
+                        "http://localhost:7723/foods",
+                        {
+                            method: "POST",
+                            body: formData,
+                        }
+                    );
 
-        try {
-            const response = await fetch("http://localhost:7723/foods", {
-                method: "POST",
-                body: formData,
-            });
-
-            const result = await response.json();
-            if (result) {
-                setReload(!reload);
-                setFoodName("");
-                setFoodType("");
-                setFoodPrice("");
-                setFoodDescription("");
-                inputRef.current.value = "";
-                setFoodImage("");
-                document.getElementById("add_food_modal").close();
+                    const result = await response.json();
+                    if (result) {
+                        setReload(!reload);
+                        setFoodName("");
+                        setFoodType("");
+                        setFoodPrice("");
+                        setFoodDescription("");
+                        inputRef.current.value = "";
+                        setFoodImage("");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             }
-        } catch (err) {
-            console.log(err);
-        }
+        });
     };
 
     const handleUpdateSubmit = async (e) => {
@@ -177,29 +221,39 @@ const Menu = () => {
             food_description: updateFoodDescription,
         };
 
-        try {
-            const response = await fetch(
-                `http://localhost:7723/foods/${selectedFoodID}`,
-                {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(food),
+        document.getElementById("update_food_modal").close();
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(
+                        `http://localhost:7723/foods/${selectedFoodID}`,
+                        {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(food),
+                        }
+                    );
+
+                    const result = await response.json();
+                    if (result) {
+                        setReload(!reload);
+                        setUpdateFoodName("");
+                        setUpdateFoodType("");
+                        setUpdateFoodPrice("");
+                        setUpdateFoodDescription("");
+
+                        document.getElementById("update_food_modal").close();
+                    }
+                } catch (err) {
+                    console.log(err);
                 }
-            );
-
-            const result = await response.json();
-            if (result) {
-                setReload(!reload);
-                setUpdateFoodName("");
-                setUpdateFoodType("");
-                setUpdateFoodPrice("");
-                setUpdateFoodDescription("");
-
-                document.getElementById("update_food_modal").close();
             }
-        } catch (err) {
-            console.log(err);
-        }
+        });
     };
 
     const handleUpdateClose = () => {

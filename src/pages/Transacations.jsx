@@ -66,29 +66,41 @@ const Transaction = () => {
         } else {
             setTransactions(
                 transactions.filter((transaction) => {
+                    const searchLowerCase = search.toLowerCase();
+
                     return (
                         transaction.transaction_id
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_date
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_time
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_total
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_status
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_type
                             .toString()
-                            .includes(search) ||
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
                         transaction.transaction_payment
                             .toString()
-                            .includes(search) ||
-                        transaction.reservation_id.toString().includes(search)
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
+                        transaction.reservation_id
+                            .toString()
+                            .toLowerCase()
+                            .includes(searchLowerCase)
                     );
                 })
             );

@@ -4,6 +4,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         // Check if user is already logged in
@@ -104,12 +105,12 @@ const Login = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
-                            <div className="form-control w-full">
+                            <div className="form-control w-full mb-2">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Password"
                                     className="input input-bordered w-full outline-none focus:outline-none"
                                     name="password"
@@ -119,6 +120,21 @@ const Login = () => {
                                         setPassword(e.target.value)
                                     }
                                 />
+                            </div>
+                            <div className="form-control w-full col-span-2">
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox checkbox-primary"
+                                        checked={showPassword}
+                                        onChange={(e) =>
+                                            setShowPassword(
+                                                e.currentTarget.checked
+                                            )
+                                        }
+                                    />
+                                    <span className="ml-2">Show Password</span>
+                                </div>
                             </div>
                             <div className="form-control mt-6">
                                 <button

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DataTable from "react-data-table-component";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaEye, FaSearch, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Staff = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
@@ -175,6 +176,16 @@ const Staff = () => {
                                     Add Staff
                                 </h3>
                                 <hr className="my-2 border-b-2 border-blue-500" />
+                                <button
+                                    className="absolute top-2 right-4 text-gray-600 cursor-pointer focus:outline-none"
+                                    onClick={() =>
+                                        document
+                                            .getElementById("my_modal_4")
+                                            .close()
+                                    }
+                                >
+                                    <FontAwesomeIcon icon={faTimes} />
+                                </button>
                                 <form
                                     method="dialog"
                                     className="modal-backdrop"
