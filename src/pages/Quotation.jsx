@@ -26,7 +26,7 @@ const Quotation = () => {
     useEffect(() => {
         const getBalance = async () => {
             const response = await fetch(
-                `http://localhost:7723/balance/${reservation_id}`
+                `http://localhost:7723/api/balance/${reservation_id}`
             );
             const res = await response.json();
 
@@ -67,18 +67,21 @@ const Quotation = () => {
         };
 
         try {
-            const response = await fetch("http://localhost:7723/transaction", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
+            const response = await fetch(
+                "http://localhost:7723/api/transaction",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                }
+            );
 
             const result = await response.json();
 
             if (response.ok) {
                 try {
                     const response2 = await fetch(
-                        `http://localhost:7723/update-reservation-status/${reservation_id}`,
+                        `http://localhost:7723/api/update-reservation-status/${reservation_id}`,
                         {
                             method: "PATCH",
                             headers: {
@@ -134,29 +137,29 @@ const Quotation = () => {
     useEffect(() => {
         const getReservationDetails = async () => {
             const response = await fetch(
-                `http://localhost:7723/reservations/${reservation_id}`
+                `http://localhost:7723/api/reservations/${reservation_id}`
             );
             const res = await response.json();
 
             const response2 = await fetch(
-                `http://localhost:7723/event/${res.event_id}`
+                `http://localhost:7723/api/event/${res.event_id}`
             );
             const res2 = await response2.json();
 
             const response3 = await fetch(
-                `http://localhost:7723/adds_on/${reservation_id}`
+                `http://localhost:7723/api/adds_on/${reservation_id}`
             );
             const res3 = await response3.json();
 
             const response4 = await fetch(
-                `http://localhost:7723/foods/
+                `http://localhost:7723/api/foods/
                 `
             );
 
             const res4 = await response4.json();
 
             const response5 = await fetch(
-                `http://localhost:7723/reservation_food/${reservation_id}`
+                `http://localhost:7723/api/reservation_food/${reservation_id}`
             );
 
             const res5 = await response5.json();
@@ -204,7 +207,7 @@ const Quotation = () => {
             let response = "";
             if (newStatus === "Approve") {
                 response = await fetch(
-                    `http://localhost:7723/update-reservation/${reservation_id}`,
+                    `http://localhost:7723/api/update-reservation/${reservation_id}`,
                     {
                         method: "PATCH",
                         body: JSON.stringify(data),
@@ -215,7 +218,7 @@ const Quotation = () => {
                 );
             } else {
                 response = await fetch(
-                    `http://localhost:7723/update-status/${reservation_id}`,
+                    `http://localhost:7723/api/update-status/${reservation_id}`,
                     {
                         method: "PATCH",
                         body: JSON.stringify({ status: newStatus }),

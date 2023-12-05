@@ -128,7 +128,7 @@ const Announcement = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/announcements/${selectedAnnouncement.announcement_id}`,
+                        `http://localhost:7723/api/announcements/${selectedAnnouncement.announcement_id}`,
                         {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
@@ -186,7 +186,7 @@ const Announcement = () => {
             // Check if the user clicked the "Confirm" button
             if (result.isConfirmed) {
                 const response = await fetch(
-                    `http://localhost:7723/announcements/${announcement_id}`,
+                    `http://localhost:7723/api/announcements/${announcement_id}`,
                     {
                         method: "DELETE",
                     }
@@ -198,7 +198,7 @@ const Announcement = () => {
 
     useEffect(() => {
         const getClients = async () => {
-            const response = await fetch("http://localhost:7723/clients");
+            const response = await fetch("http://localhost:7723/api/clients");
             const data = await response.json();
             setClients(data);
         };
@@ -207,7 +207,9 @@ const Announcement = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("http://localhost:7723/announcements");
+            const response = await fetch(
+                "http://localhost:7723/api/announcements"
+            );
             const data = await response.json();
             return data;
         };
@@ -300,7 +302,7 @@ const Announcement = () => {
         const insertAnnouncement = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/announcements",
+                    "http://localhost:7723/api/announcements",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

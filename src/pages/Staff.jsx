@@ -32,7 +32,7 @@ const Staff = () => {
 
     const getStaff = async () => {
         try {
-            const response = await fetch("http://localhost:7723/staff");
+            const response = await fetch("http://localhost:7723/api/staff");
             const jsonData = await response.json();
 
             if (search !== "") {
@@ -72,7 +72,7 @@ const Staff = () => {
         let staffID = "STF" + Math.floor(Math.random() * 9000000 + 1000000);
         setFormData((prevData) => ({ ...prevData, staff_id: staffID }));
         try {
-            const response = await fetch("http://localhost:7723/staff", {
+            const response = await fetch("http://localhost:7723/api/staff", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

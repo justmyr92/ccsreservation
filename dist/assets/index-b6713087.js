@@ -18266,7 +18266,7 @@ const fn = Dg(mj),
                 (async () => {
                     try {
                         const Be = await (
-                            await fetch("http://localhost:7723/client/", {
+                            await fetch("http://localhost:7723/api/client/", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({ client_id: n }),
@@ -18343,14 +18343,14 @@ const fn = Dg(mj),
         P.useEffect(() => {
             const me = async () => {
                 const it = await (
-                    await fetch("http://localhost:7723/foods")
+                    await fetch("http://localhost:7723/api/foods")
                 ).json();
                 t(it);
             };
             n &&
                 (async () => {
                     const et = await (
-                        await fetch("http://localhost:7723/client", {
+                        await fetch("http://localhost:7723/api/client", {
                             method: "POST",
                             headers: { "Content-type": "application/json" },
                             body: JSON.stringify({ client_id: n }),
@@ -18377,7 +18377,7 @@ const fn = Dg(mj),
                 return;
             }
             const Be = await (
-                await fetch("http://localhost:7723/reservation_count", {
+                await fetch("http://localhost:7723/api/reservation_count", {
                     method: "POST",
                     headers: { "Content-type": "application/json" },
                     body: JSON.stringify({ client_id: n }),
@@ -18404,7 +18404,7 @@ const fn = Dg(mj),
                 reverseButtons: !0,
             }).then(async (it) => {
                 if (it.isConfirmed) {
-                    const Oe = await fetch("http://localhost:7723/events", {
+                    const Oe = await fetch("http://localhost:7723/api/events", {
                             method: "POST",
                             headers: { "Content-type": "application/json" },
                             body: JSON.stringify({
@@ -18432,7 +18432,7 @@ const fn = Dg(mj),
                                 status: "Pending",
                             },
                             Qi = await fetch(
-                                "http://localhost:7723/reservation",
+                                "http://localhost:7723/api/reservation",
                                 {
                                     method: "POST",
                                     headers: {
@@ -18450,7 +18450,7 @@ const fn = Dg(mj),
                                             reservation_id: Un.reservation_id,
                                         },
                                         pi = await fetch(
-                                            "http://localhost:7723/adds_on",
+                                            "http://localhost:7723/api/adds_on",
                                             {
                                                 method: "POST",
                                                 headers: {
@@ -18469,7 +18469,7 @@ const fn = Dg(mj),
                                     food_id: Ln,
                                 };
                                 await fetch(
-                                    "http://localhost:7723/reservation_food",
+                                    "http://localhost:7723/api/reservation_food",
                                     {
                                         method: "POST",
                                         headers: {
@@ -19850,7 +19850,7 @@ const fn = Dg(mj),
                 const h = { client_email: e, client_password: n };
                 try {
                     const v = await (
-                        await fetch("http://localhost:7723/login", {
+                        await fetch("http://localhost:7723/api/login", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(h),
@@ -20034,7 +20034,7 @@ const fn = Dg(mj),
             }
             (
                 await (
-                    await fetch("http://localhost:7723/register", {
+                    await fetch("http://localhost:7723/api/register", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -30693,7 +30693,7 @@ const E4 = () => {
             const I = async () => {
                     try {
                         const Z = await fetch(
-                            "http://localhost:7723/payment_amount"
+                            "http://localhost:7723/api/payment_amount"
                         );
                         if (!Z.ok) throw new Error("Failed to fetch profits");
                         const q = await Z.json();
@@ -30707,7 +30707,7 @@ const E4 = () => {
                 D = async () => {
                     try {
                         const Z = await fetch(
-                            "http://localhost:7723/client_count"
+                            "http://localhost:7723/api/client_count"
                         );
                         if (!Z.ok) throw new Error("Failed to fetch profits");
                         const q = await Z.json();
@@ -30721,7 +30721,7 @@ const E4 = () => {
                 F = async () => {
                     try {
                         const Z = await fetch(
-                            "http://localhost:7723/reservation_count"
+                            "http://localhost:7723/api/reservation_count"
                         );
                         if (!Z.ok) throw new Error("Failed to fetch profits");
                         const q = await Z.json();
@@ -30735,7 +30735,7 @@ const E4 = () => {
                 $ = async () => {
                     try {
                         const Z = await fetch(
-                            "http://localhost:7723/menu_count"
+                            "http://localhost:7723/api/menu_count"
                         );
                         if (!Z.ok) throw new Error("Failed to fetch profits");
                         const q = await Z.json();
@@ -30749,7 +30749,7 @@ const E4 = () => {
                 K = async (Z) => {
                     try {
                         const q = await fetch(
-                            `http://localhost:7723/transaction_sum/${Z}`
+                            `http://localhost:7723/api/transaction_sum/${Z}`
                         );
                         if (!q.ok)
                             throw new Error(`Failed to fetch profits for ${Z}`);
@@ -35584,7 +35584,7 @@ const WN = () => {
                 const h = async () => {
                     try {
                         const v = await (
-                            await fetch("http://localhost:7723/clients")
+                            await fetch("http://localhost:7723/api/clients")
                         ).json();
                         s(v);
                     } catch (m) {
@@ -35746,7 +35746,7 @@ const WN = () => {
             P.useEffect(() => {
                 (async () => {
                     const oe = await (
-                        await fetch("http://localhost:7723/foods")
+                        await fetch("http://localhost:7723/api/foods")
                     ).json();
                     s(oe), h(!1);
                 })();
@@ -35765,7 +35765,7 @@ const WN = () => {
                 for (var oe of re.entries()) console.log(oe[0] + ", " + oe[1]);
                 try {
                     (await (
-                        await fetch("http://localhost:7723/foods", {
+                        await fetch("http://localhost:7723/api/foods", {
                             method: "POST",
                             body: re,
                             credentials: "include",
@@ -35793,7 +35793,7 @@ const WN = () => {
                 };
                 try {
                     (await (
-                        await fetch(`http://localhost:7723/foods/${I}`, {
+                        await fetch(`http://localhost:7723/api/foods/${I}`, {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(re),
@@ -44910,13 +44910,16 @@ const gM = () => {
                     (async () => {
                         try {
                             const m = await (
-                                await fetch("http://localhost:7723/client/", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify({ client_id: r }),
-                                })
+                                await fetch(
+                                    "http://localhost:7723/api/client/",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({ client_id: r }),
+                                    }
+                                )
                             ).json();
                             c(m);
                         } catch (h) {
@@ -45488,7 +45491,7 @@ const gM = () => {
         P.useEffect(() => {
             (async () => {
                 const h = await (
-                    await fetch("http://localhost:7723/reservations")
+                    await fetch("http://localhost:7723/api/reservations")
                 ).json();
                 s(h);
             })();
@@ -45579,7 +45582,7 @@ const gM = () => {
                 };
                 try {
                     const he = await fetch(
-                            "http://localhost:7723/transaction",
+                            "http://localhost:7723/api/transaction",
                             {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
@@ -45590,7 +45593,7 @@ const gM = () => {
                     if (he.ok)
                         try {
                             const X = await fetch(
-                                `http://localhost:7723/update-reservation-status/${M}`,
+                                `http://localhost:7723/api/update-reservation-status/${M}`,
                                 {
                                     method: "PATCH",
                                     headers: {
@@ -45636,24 +45639,26 @@ const gM = () => {
                 (async () => {
                     const he = await (
                             await fetch(
-                                `http://localhost:7723/reservations/${M}`
+                                `http://localhost:7723/api/reservations/${M}`
                             )
                         ).json(),
                         X = await (
                             await fetch(
-                                `http://localhost:7723/event/${he.event_id}`
+                                `http://localhost:7723/api/event/${he.event_id}`
                             )
                         ).json(),
                         Q = await (
-                            await fetch(`http://localhost:7723/adds_on/${M}`)
+                            await fetch(
+                                `http://localhost:7723/api/adds_on/${M}`
+                            )
                         ).json(),
                         re = await (
-                            await fetch(`http://localhost:7723/foods/
+                            await fetch(`http://localhost:7723/api/foods/
                 `)
                         ).json(),
                         xe = await (
                             await fetch(
-                                `http://localhost:7723/reservation_food/${M}`
+                                `http://localhost:7723/api/reservation_food/${M}`
                             )
                         ).json();
                     C(re), O(xe), s(Q), h(he), c(X), console.log(he, X);
@@ -45670,7 +45675,7 @@ const gM = () => {
                     fe.append("file", Y);
                 try {
                     const he = await fetch(
-                        `http://localhost:7723/update-reservation/${M}`,
+                        `http://localhost:7723/api/update-reservation/${M}`,
                         { method: "PATCH", credentials: "include", body: fe }
                     );
                     document.getElementById("my_modal_2").close(),
@@ -46341,7 +46346,7 @@ const gM = () => {
                     if (
                         (h(!0),
                         !(
-                            await fetch("http://localhost:7723/ratings", {
+                            await fetch("http://localhost:7723/api/ratings", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
@@ -46378,7 +46383,7 @@ const gM = () => {
                 (async () => {
                     try {
                         const W = await fetch(
-                            `http://localhost:7723/reservations/client/${n}`
+                            `http://localhost:7723/api/reservations/client/${n}`
                         );
                         if (!W.ok)
                             throw new Error("Failed to fetch reservations");
@@ -46388,7 +46393,7 @@ const gM = () => {
                             Q.map(async (z) => {
                                 const oe = await (
                                     await fetch(
-                                        `http://localhost:7723/ratings/${z.reservation_id}`
+                                        `http://localhost:7723/api/ratings/${z.reservation_id}`
                                     )
                                 ).json();
                                 let xe = {
@@ -46440,7 +46445,7 @@ const gM = () => {
                             if (
                                 !(
                                     await fetch(
-                                        `http://localhost:7723/reservations/${X}`,
+                                        `http://localhost:7723/api/reservations/${X}`,
                                         {
                                             method: "DELETE",
                                             headers: {
@@ -46473,26 +46478,26 @@ const gM = () => {
                     try {
                         const Q = await (
                                 await fetch(
-                                    `http://localhost:7723/reservations/${C.reservation_id}`
+                                    `http://localhost:7723/api/reservations/${C.reservation_id}`
                                 )
                             ).json(),
                             re = await (
                                 await fetch(
-                                    `http://localhost:7723/event/${Q.event_id}`
+                                    `http://localhost:7723/api/event/${Q.event_id}`
                                 )
                             ).json(),
                             xe = await (
                                 await fetch(
-                                    `http://localhost:7723/adds_on/${C.reservation_id}`
+                                    `http://localhost:7723/api/adds_on/${C.reservation_id}`
                                 )
                             ).json();
                         console.log(xe, "Asd");
                         const B = await (
-                                await fetch("http://localhost:7723/foods")
+                                await fetch("http://localhost:7723/api/foods")
                             ).json(),
                             Fe = await (
                                 await fetch(
-                                    `http://localhost:7723/reservation_food/${C.reservation_id}`
+                                    `http://localhost:7723/api/reservation_food/${C.reservation_id}`
                                 )
                             ).json();
                         ne(B), he(Fe), F(xe), Z(Q), K(re), console.log(Q, re);
@@ -47217,7 +47222,7 @@ const gM = () => {
             (async () => {
                 const h = await (
                     await fetch(
-                        `http://localhost:7723/event_reservation_rating/${s}`
+                        `http://localhost:7723/api/event_reservation_rating/${s}`
                     )
                 ).json();
                 console.log(h), r(h);
@@ -47236,7 +47241,7 @@ const gM = () => {
             }).then(async (u) => {
                 if (u.isConfirmed) {
                     const m = await (
-                        await fetch(`http://localhost:7723/ratings/${c}`, {
+                        await fetch(`http://localhost:7723/api/ratings/${c}`, {
                             method: "DELETE",
                         })
                     ).json();
@@ -47389,7 +47394,7 @@ const gM = () => {
                                 try {
                                     const _ = await (
                                         await fetch(
-                                            `http://localhost:7723/client/${e.client_id}`,
+                                            `http://localhost:7723/api/client/${e.client_id}`,
                                             {
                                                 method: "PATCH",
                                                 headers: {
@@ -47573,13 +47578,16 @@ const gM = () => {
                     (async () => {
                         try {
                             const _ = await (
-                                await fetch("http://localhost:7723/client/", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify({ client_id: e }),
-                                })
+                                await fetch(
+                                    "http://localhost:7723/api/client/",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({ client_id: e }),
+                                    }
+                                )
                             ).json();
                             s(_);
                         } catch (v) {
@@ -47764,7 +47772,7 @@ const OS = (e, t, n = {}) =>
         P.useEffect(() => {
             (async () => {
                 const m = await (
-                    await fetch("http://localhost:7723/clients")
+                    await fetch("http://localhost:7723/api/clients")
                 ).json();
                 a(m);
             })();
@@ -48074,7 +48082,7 @@ const OS = (e, t, n = {}) =>
         P.useEffect(() => {
             (async () => {
                 const k = await (
-                    await fetch("http://localhost:7723/ratings")
+                    await fetch("http://localhost:7723/api/ratings")
                 ).json();
                 if (k.length === null || k.length === 0) s([]), c(0), h(0);
                 else {
@@ -48365,7 +48373,7 @@ const OS = (e, t, n = {}) =>
             ];
         return (
             P.useEffect(() => {
-                fetch("http://localhost:7723/transactions")
+                fetch("http://localhost:7723/api/transactions")
                     .then((u) => u.json())
                     .then((u) => {
                         s(u);

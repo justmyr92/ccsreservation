@@ -56,7 +56,7 @@ const Transaction = () => {
     const [search, setSearch] = useState("");
     useEffect(() => {
         const getClients = async () => {
-            const response = fetch("http://localhost:7723/transactions");
+            const response = fetch("http://localhost:7723/api/transactions");
             const data = await (await response).json();
             setTransactions(data);
         };

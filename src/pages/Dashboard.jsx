@@ -55,7 +55,7 @@ const Dashboard = () => {
         const getStatus = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/status_count"
+                    "http://localhost:7723/api/status_count"
                 );
 
                 if (!response.ok) {
@@ -133,7 +133,7 @@ const Dashboard = () => {
         const getProfit = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/payment_amount"
+                    "http://localhost:7723/api/payment_amount"
                 );
 
                 if (!response.ok) {
@@ -159,7 +159,7 @@ const Dashboard = () => {
         const getClientCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/client_count"
+                    "http://localhost:7723/api/client_count"
                 );
 
                 if (!response.ok) {
@@ -183,7 +183,7 @@ const Dashboard = () => {
         const getReservationCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/reservation_count"
+                    "http://localhost:7723/api/reservation_count"
                 );
 
                 if (!response.ok) {
@@ -207,7 +207,7 @@ const Dashboard = () => {
         const getMenuCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/menu_count"
+                    "http://localhost:7723/api/menu_count"
                 );
 
                 if (!response.ok) {
@@ -231,7 +231,7 @@ const Dashboard = () => {
         const fetchMonthlyProfit = async (month) => {
             try {
                 const response = await fetch(
-                    `http://localhost:7723/transaction_sum/${month}`
+                    `http://localhost:7723/api/transaction_sum/${month}`
                 );
 
                 if (!response.ok) {

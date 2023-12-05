@@ -54,7 +54,7 @@ const Profilee = ({ clientData, setReload }) => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/client/${clientData.client_id}`,
+                        `http://localhost:7723/api/client/${clientData.client_id}`,
                         {
                             method: "PATCH",
                             headers: {

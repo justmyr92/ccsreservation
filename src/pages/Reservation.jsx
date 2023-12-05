@@ -27,11 +27,14 @@ const Reservation = () => {
             try {
                 //via post request
 
-                const response = await fetch("http://localhost:7723/client/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ client_id: customerID }),
-                });
+                const response = await fetch(
+                    "http://localhost:7723/api/client/",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ client_id: customerID }),
+                    }
+                );
                 const result = await response.json();
                 setClientData(result);
             } catch (err) {
@@ -181,13 +184,13 @@ const Reservation = () => {
 
     useEffect(() => {
         const fetchFoods = async () => {
-            const response = await fetch("http://localhost:7723/foods");
+            const response = await fetch("http://localhost:7723/api/foods");
             const data = await response.json();
             setFoods(data);
         };
         const fetchCustomer = async () => {
             const client_id = customerID;
-            const response = await fetch("http://localhost:7723/client", {
+            const response = await fetch("http://localhost:7723/api/client", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -213,7 +216,7 @@ const Reservation = () => {
     useEffect(() => {
         const fetchFoodTypes = async () => {
             const response = await fetch(
-                "http://localhost:7723/distinct/food_types"
+                "http://localhost:7723/api/distinct/food_types"
             );
             const data = await response.json();
             setFoodTypes(data);
@@ -243,7 +246,7 @@ const Reservation = () => {
             return acc;
         }, {});
         const reservationCount = await fetch(
-            "http://localhost:7723/reservation_count",
+            "http://localhost:7723/api/reservation_count",
             {
                 method: "POST",
                 headers: {
@@ -292,13 +295,16 @@ const Reservation = () => {
                     event_guests: eventGuests,
                 };
 
-                const response = await fetch("http://localhost:7723/events", {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify(eventDetails),
-                });
+                const response = await fetch(
+                    "http://localhost:7723/api/events",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                        body: JSON.stringify(eventDetails),
+                    }
+                );
 
                 const data = await response.json();
 
@@ -315,7 +321,7 @@ const Reservation = () => {
                     };
 
                     const reservationResponse = await fetch(
-                        "http://localhost:7723/reservation",
+                        "http://localhost:7723/api/reservation",
                         {
                             method: "POST",
                             headers: {
@@ -377,7 +383,7 @@ const Reservation = () => {
                                 };
 
                                 const addsOnResponse = await fetch(
-                                    "http://localhost:7723/adds_on",
+                                    "http://localhost:7723/api/adds_on",
                                     {
                                         method: "POST",
                                         headers: {
@@ -409,7 +415,7 @@ const Reservation = () => {
                             };
 
                             const foodResponse = await fetch(
-                                "http://localhost:7723/reservation_food",
+                                "http://localhost:7723/api/reservation_food",
                                 {
                                     method: "POST",
                                     headers: {

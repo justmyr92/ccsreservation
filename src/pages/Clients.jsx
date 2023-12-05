@@ -62,7 +62,9 @@ const Clients = () => {
     useEffect(() => {
         const getClients = async () => {
             try {
-                const response = await fetch("http://localhost:7723/clients");
+                const response = await fetch(
+                    "http://localhost:7723/api/clients"
+                );
                 const result = await response.json();
                 setClients(result);
             } catch (err) {

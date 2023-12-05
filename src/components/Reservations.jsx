@@ -25,7 +25,7 @@ const Reservations = () => {
         try {
             setSubmittingRating(true); // Set loading state to true
 
-            const response = await fetch("http://localhost:7723/ratings", {
+            const response = await fetch("http://localhost:7723/api/ratings", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -78,7 +78,7 @@ const Reservations = () => {
         const getReservations = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:7723/reservations/client/${userID}`
+                    `http://localhost:7723/api/reservations/client/${userID}`
                 );
                 if (!res.ok) {
                     throw new Error("Failed to fetch reservations");
@@ -106,7 +106,7 @@ const Reservations = () => {
                     const ratingPromises = data.map(async (reservation) => {
                         try {
                             const result = await fetch(
-                                `http://localhost:7723/ratings/${reservation.reservation_id}`
+                                `http://localhost:7723/api/ratings/${reservation.reservation_id}`
                             );
                             if (result.ok) {
                                 const ratingsData = await result.json();
@@ -182,7 +182,7 @@ const Reservations = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/reservations/${reservationId}`,
+                        `http://localhost:7723/api/reservations/${reservationId}`,
                         {
                             method: "DELETE",
                             headers: {
@@ -220,26 +220,28 @@ const Reservations = () => {
             console.log(selectedReservation);
             try {
                 const response = await fetch(
-                    `http://localhost:7723/reservations/${selectedReservation.reservation_id}`
+                    `http://localhost:7723/api/reservations/${selectedReservation.reservation_id}`
                 );
                 const res = await response.json();
 
                 const response2 = await fetch(
-                    `http://localhost:7723/event/${res.event_id}`
+                    `http://localhost:7723/api/event/${res.event_id}`
                 );
                 const res2 = await response2.json();
 
                 const response3 = await fetch(
-                    `http://localhost:7723/adds_on/${selectedReservation.reservation_id}`
+                    `http://localhost:7723/api/adds_on/${selectedReservation.reservation_id}`
                 );
                 const res3 = await response3.json();
                 console.log(res3, "Asd");
-                const response4 = await fetch(`http://localhost:7723/foods`);
+                const response4 = await fetch(
+                    `http://localhost:7723/api/foods`
+                );
 
                 const res4 = await response4.json();
 
                 const response5 = await fetch(
-                    `http://localhost:7723/reservation_food/${selectedReservation.reservation_id}`
+                    `http://localhost:7723/api/reservation_food/${selectedReservation.reservation_id}`
                 );
 
                 const res5 = await response5.json();
