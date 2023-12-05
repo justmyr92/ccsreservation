@@ -277,10 +277,13 @@ const Quotation = () => {
                             </Link>
                         </div>
                         <p className="text-gray-900 text-sm">
-                            lorem ipsum dolor sit amet consectetur adipisicing
-                            elit sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua ut enim ad minim veniam quis
-                            nostrud.
+                            Experience the epitome of culinary excellence with
+                            Calinao Catering Services. Our online reservation
+                            system streamlines the process, offering
+                            personalized quotations that detail your selected
+                            menu, services, and costs. Elevate your events with
+                            ease and precision – reserve your extraordinary
+                            catering experience today.
                         </p>
                     </div>
                     <hr className="my-2 border-gray-300" />

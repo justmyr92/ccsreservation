@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import plate from "../assets/plate.png";
+import { storage } from "../firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const FoodCard = ({ food, foodID, setFoodID }) => {
     const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState("");
 
     const handleFoodClick = (food_id) => {
         //if foodID is in the array, remove it
@@ -19,10 +22,24 @@ const FoodCard = ({ food, foodID, setFoodID }) => {
         setTimeout(() => {
             //set loading to false
             setLoading(false);
-        }, 2000);
+        }, 1000);
 
         setFoodID((prevFoodID) => [...prevFoodID, food_id]);
     };
+
+    useEffect(() => {
+        // Create a reference to the file we want to download
+        const storageRef = ref(storage, `foods/${food.food_image}`);
+        // Get the download URL
+        getDownloadURL(storageRef)
+            .then((url) => {
+                // Insert url into an <img> tag to "download"
+                setImage(url);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [food.food_image]);
 
     return (
         <div
@@ -31,12 +48,19 @@ const FoodCard = ({ food, foodID, setFoodID }) => {
         >
             <div className="absolute top-0 right-[50%] transform -translate-y-1/2 translate-x-1/2 w-[10rem] h-[10rem] rounded-full p-3 bg-white shadow-lg">
                 <img
-                    src={plate}
+                    src={image}
                     alt={food.food_name}
-                    className="food-card-image"
+                    className="food-card-image rounded-full w-full h-full object-cover"
                 />
             </div>
             <div className="food-card-body mt-20">
+                {/* <div className="img bg-white rounded-full w-[10rem] h-[10rem] mx-auto shadow-lg">
+                    <img
+                        src={image}
+                        alt={food.food_name}
+                        className="food-card-image w-full h-full object-cover"
+                    />
+                </div> */}
                 <h5 className="food-card-title title text-xl text-center text-orange-500 mb-3">
                     {food.food_name}
                 </h5>

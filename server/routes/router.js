@@ -79,15 +79,27 @@ router.get("/staff", async (req, res) => {
     }
 });
 
+//delete staff
+router.delete("/staff/:staff_email", async (req, res) => {
+    try {
+        const { staff_email } = req.params;
+
+        const result = await pool.query(
+            "DELETE FROM staff_table WHERE staff_email = $1",
+            [staff_email]
+        );
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 router.post("/staff", async (req, res) => {
-    const {
-        staff_id,
-        staff_fname,
-        staff_lname,
-        staff_email,
-        staff_password,
-        role_id,
-    } = req.body;
+    const { staff_fname, staff_lname, staff_email, staff_password, role_id } =
+        req.body;
+
+    const staff_id = "STF" + Math.floor(Math.random() * 900000 + 100000);
 
     console.log(req.body);
 

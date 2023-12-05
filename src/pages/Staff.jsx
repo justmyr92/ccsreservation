@@ -14,7 +14,6 @@ const Staff = () => {
     const [staffs, setStaffs] = useState([]);
 
     const [formData, setFormData] = useState({
-        staff_id: "",
         staff_fname: "",
         staff_lname: "",
         staff_email: "",
@@ -70,9 +69,6 @@ const Staff = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //genarate staff id "STF + random number 1000000 - 9999999"
-        let staffID = "STF" + Math.floor(Math.random() * 9000000 + 1000000);
-        setFormData((prevData) => ({ ...prevData, staff_id: staffID }));
         try {
             const response = await fetch(
                 "https://ccsreservaton.online/api/staff",

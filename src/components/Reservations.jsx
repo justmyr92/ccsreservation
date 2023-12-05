@@ -97,11 +97,14 @@ const Reservations = () => {
                         return { ...reservation, proposal: url };
                     });
 
-                    const updatedReservations = await Promise.all(
-                        updateReservations
-                    );
-
-                    setReservations(updatedReservations);
+                    if (data.proposal) {
+                        const updatedReservations = await Promise.all(
+                            updateReservations
+                        );
+                        setReservations(updatedReservations);
+                    } else {
+                        setReservations(data);
+                    }
 
                     setRatingCount([]);
 
@@ -281,7 +284,12 @@ const Reservations = () => {
         {
             name: "Date",
             width: "15%",
-            selector: (row) => row.event_date,
+            selector: (row) =>
+                //event date is consist of date and time then convert it to Date Time AM/PM
+                formatDate(row.event_date.split("T")[0]) + " " + row.event_time,
+            //
+
+            // row.event_date,
         },
         {
             name: "Reservation",
@@ -315,7 +323,7 @@ const Reservations = () => {
                         </button>
                     )}
                     {
-                        row.status === "Approve" && (
+                        row.status === "Approve" && row.proposal !== "" && (
                             <button
                                 className="btn bg-green-500 text-white btn-sm"
                                 onClick={() => viewProposal(row)}
