@@ -7,6 +7,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase";
 import Swal from "sweetalert2";
 const Reservations = () => {
     const [reservations, setReservations] = useState([]);
@@ -83,7 +85,21 @@ const Reservations = () => {
                 }
                 const data = await res.json();
                 if (res.ok) {
-                    setReservations(data);
+                    const updateReservations = data.map(async (reservation) => {
+                        const imageRef = ref(
+                            storage,
+                            `reservation/${reservation.proposal}`
+                        );
+                        const url = await getDownloadURL(imageRef);
+                        return { ...reservation, proposal: url };
+                    });
+
+                    const updatedReservations = await Promise.all(
+                        updateReservations
+                    );
+
+                    setReservations(updatedReservations);
+
                     setRatingCount([]);
 
                     // Use Promise.all to wait for all asynchronous calls to complete
@@ -294,7 +310,7 @@ const Reservations = () => {
                         </button>
                     )}
                     {
-                        row.status === "Approved" && (
+                        row.status === "Approve" && (
                             <button
                                 className="btn bg-green-500 text-white btn-sm"
                                 onClick={() => viewProposal(row)}

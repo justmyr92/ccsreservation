@@ -4,6 +4,9 @@ import DataTable from "react-data-table-component";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 const Menu = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
@@ -128,32 +131,52 @@ const Menu = () => {
 
     useEffect(() => {
         const fetchMenu = async () => {
-            const response = await fetch("http://localhost:7723/foods");
-            const result = await response.json();
+            try {
+                const response = await fetch("http://localhost:7723/foods");
+                const result = await response.json();
 
-            // Convert search to lowercase
-            const searchLowerCase = search.toLowerCase();
+                // Convert search to lowercase
+                const searchLowerCase = search.toLowerCase();
 
-            // Convert all relevant fields in announcements to lowercase and perform case-insensitive comparison
-            const filteredMenu = result.filter(
-                (food) =>
-                    food.food_id
-                        .toString()
-                        .toLowerCase()
-                        .includes(searchLowerCase) ||
-                    food.food_name.toLowerCase().includes(searchLowerCase) ||
-                    food.food_type.toLowerCase().includes(searchLowerCase) ||
-                    food.food_price
-                        .toString()
-                        .toLowerCase()
-                        .includes(searchLowerCase) ||
-                    food.food_description
-                        .toLowerCase()
-                        .includes(searchLowerCase)
-            );
+                // Convert all relevant fields in foods to lowercase and perform case-insensitive comparison
+                const filteredMenu = result.filter(
+                    (food) =>
+                        food.food_id
+                            .toString()
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
+                        food.food_name
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
+                        food.food_type
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
+                        food.food_price
+                            .toString()
+                            .toLowerCase()
+                            .includes(searchLowerCase) ||
+                        food.food_description
+                            .toLowerCase()
+                            .includes(searchLowerCase)
+                );
 
-            setMenu(filteredMenu);
-            setReload(false);
+                // Use Promise.all to handle asynchronous operations in parallel
+                const updatedMenu = await Promise.all(
+                    filteredMenu.map(async (food) => {
+                        const imageRef = ref(
+                            storage,
+                            `foods/${food.food_image}`
+                        );
+                        const url = await getDownloadURL(imageRef);
+                        return { ...food, food_image: url };
+                    })
+                );
+
+                setMenu(updatedMenu);
+                setReload(false);
+            } catch (error) {
+                console.error("Error fetching menu:", error);
+            }
         };
 
         fetchMenu();
@@ -165,18 +188,26 @@ const Menu = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const new_food_image = foodImage.name + v4();
+        // var formData = new FormData();
 
-        var formData = new FormData();
+        // formData.append("food_name", foodName);
+        // formData.append("food_type", foodType);
+        // formData.append("food_price", foodPrice);
+        // formData.append("food_description", foodDescription);
+        // formData.append("food_image", foodImage); // Assuming foodImage is a File object
+        // formData.append("food_image_name", new_food_image);
+        const data = {
+            food_name: foodName,
+            food_type: foodType,
+            food_price: foodPrice,
+            food_description: foodDescription,
+            food_image: new_food_image,
+        };
 
-        formData.append("food_name", foodName);
-        formData.append("food_type", foodType);
-        formData.append("food_price", foodPrice);
-        formData.append("food_description", foodDescription);
-        formData.append("food_image", foodImage); // Assuming foodImage is a File object
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ", " + pair[1]);
-        }
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0] + ", " + pair[1]);
+        // }
         document.getElementById("add_food_modal").close();
         Swal.fire({
             title: "Are you sure?",
@@ -190,19 +221,28 @@ const Menu = () => {
                         "http://localhost:7723/foods",
                         {
                             method: "POST",
-                            body: formData,
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(data),
                         }
                     );
 
                     const result = await response.json();
                     if (result) {
-                        setReload(!reload);
-                        setFoodName("");
-                        setFoodType("");
-                        setFoodPrice("");
-                        setFoodDescription("");
-                        inputRef.current.value = "";
-                        setFoodImage("");
+                        const imageRef = ref(
+                            storage,
+                            `foods/${new_food_image}`
+                        );
+                        uploadBytes(imageRef, foodImage).then(() => {
+                            setReload(!reload);
+                            setFoodName("");
+                            setFoodType("");
+                            setFoodPrice("");
+                            setFoodDescription("");
+                            inputRef.current.value = "";
+                            setFoodImage("");
+                        });
                     }
                 } catch (err) {
                     console.log(err);

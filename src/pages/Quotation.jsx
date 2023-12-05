@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Swal from "sweetalert2";
-
+import { storage } from "../firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 const Quotation = () => {
     const [userID, setUserID] = useState(localStorage.getItem("userID"));
     const [roleID, setRoleID] = useState(localStorage.getItem("roleID"));
@@ -178,12 +180,24 @@ const Quotation = () => {
         e.preventDefault();
 
         // Create FormData object to send files
-        const formData = new FormData();
-        formData.append("status", newStatus);
+        // const formData = new FormData();
+        // formData.append("status", newStatus);
 
+        // if (newStatus === "Approve") {
+        //     formData.append("price", price);
+        //     formData.append("file", file);
+        // }
+
+        let data = {
+            status: newStatus,
+        };
+        const new_file = file.name + v4();
         if (newStatus === "Approve") {
-            formData.append("price", price);
-            formData.append("file", file);
+            data = {
+                status: newStatus,
+                price: price,
+                file: new_file,
+            };
         }
 
         try {
@@ -193,7 +207,10 @@ const Quotation = () => {
                     `http://localhost:7723/update-reservation/${reservation_id}`,
                     {
                         method: "PATCH",
-                        body: formData,
+                        body: JSON.stringify(data),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
                     }
                 );
             } else {
@@ -212,15 +229,19 @@ const Quotation = () => {
             document.getElementById("my_modal_2").close();
 
             if (response.ok) {
-                Swal.fire({
-                    title: "Success!",
-                    text: "Reservation status updated",
-                    icon: "success",
-                    confirmButtonText: "Ok",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "/quotation/" + reservation_id;
-                    }
+                const imageRef = ref(storage, `reservation/${new_file}`);
+                uploadBytes(imageRef, file).then(() => {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Reservation status updated",
+                        icon: "success",
+                        confirmButtonText: "Ok",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href =
+                                "/quotation/" + reservation_id;
+                        }
+                    });
                 });
             } else {
                 Swal.fire({

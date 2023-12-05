@@ -377,17 +377,23 @@ app.get("/reservation_food/:reservation_id", async (req, res) => {
     }
 });
 
-app.post("/foods", upload.single("food_image"), async (req, res) => {
+// app.post("/foods", upload.single("food_image"), async (req, res) => {
+app.post("/foods", async (req, res) => {
     //goods
     try {
-        let id = "FD_" + Math.random().toString(36).substr(2, 9); // Generate a unique food_id (you may need a more sophisticated approach)
+        //id fd + random number from 100000 to 999999
+        let id = "FD" + Math.floor(Math.random() * 900000 + 100000);
 
+        const {
+            food_name,
+            food_type,
+            food_price,
+            food_description,
+            food_image,
+        } = req.body;
+        //const food_image = "../src/assets/foods/" + req.file.filename;
+        //const food_image = food_image_name;
         console.log(req.body, "asd");
-        console.log(req.file, "asd");
-
-        const { food_name, food_type, food_price, food_description } = req.body;
-        const food_image = "../src/assets/foods/" + req.file.filename;
-
         const query = `
           INSERT INTO food_table (food_id, food_name, food_type, food_price, food_description, food_image)
           VALUES ($1, $2, $3, $4, $5, $6)
@@ -782,40 +788,41 @@ app.patch("/update-reservation-status/:reservationId", async (req, res) => {
     }
 });
 
-app.patch(
-    "/update-reservation/:reservationId",
-    upload.single("file"),
-    async (req, res) => {
-        try {
-            const { reservationId } = req.params;
-            const { status, price } = req.body;
+// app.patch(
+//     "/update-reservation/:reservationId",
+//     upload.single("file"),
+//     async (req, res) => {
 
-            const fileData = "../src/assets/foods/" + req.file.filename;
-            // Update data in the database
-            const query = `
+app.patch("/update-reservation/:reservationId", async (req, res) => {
+    try {
+        const { reservationId } = req.params;
+        const { status, price, file } = req.body;
+
+        //  const fileData = "../src/assets/foods/" + req.file.filename;
+        // Update data in the database
+        const query = `
         UPDATE reservation_table
         SET status = $1, total_price = $2, proposal = $3
         WHERE reservation_id = $4
         RETURNING *;
       `;
 
-            const values = [status, price, fileData, reservationId];
-            console.log(values, req.file);
-            const result = await pool.query(query, values);
+        const values = [status, price, file, reservationId];
+        console.log(values, req.file);
+        const result = await pool.query(query, values);
 
-            res.status(200).json({
-                success: true,
-                data: result.rows[0],
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                success: false,
-                error: "Internal Server Error",
-            });
-        }
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+        });
     }
-);
+});
 
 app.patch("/update-status/:reservationId", async (req, res) => {
     try {
