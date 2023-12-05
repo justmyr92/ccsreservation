@@ -34,7 +34,7 @@ const Profile = () => {
         const fetchClientData = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/client/",
+                    "https://ccsreservaton.online/api/client/",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

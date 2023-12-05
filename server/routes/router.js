@@ -334,7 +334,7 @@ router.patch("/client/:client_id", async (req, res) => {
     }
 });
 
-//http://localhost:7723/api/clients
+//https://ccsreservaton.online/api/clients
 router.get("/clients", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM client_table");
@@ -345,7 +345,7 @@ router.get("/clients", async (req, res) => {
     }
 });
 
-//http://localhost:7723/api/menu
+//https://ccsreservaton.online/api/menu
 router.get("/foods", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM food_table");

@@ -72,7 +72,7 @@ const Home = () => {
                 //via post request
 
                 const response = await fetch(
-                    "http://localhost:7723/api/client/",
+                    "https://ccsreservaton.online/api/client/",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ const Home = () => {
         const fetchAnnouncements = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/announcements"
+                    "https://ccsreservaton.online/api/announcements"
                 );
                 const result = await response.json();
                 if (result.length > 0) {

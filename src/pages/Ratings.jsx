@@ -13,7 +13,9 @@ const Ratings = () => {
     const [filteredRatings, setFilteredRatings] = useState("all");
     useEffect(() => {
         const getRatings = async () => {
-            const response = await fetch("http://localhost:7723/api/ratings");
+            const response = await fetch(
+                "https://ccsreservaton.online/api/ratings"
+            );
             const data = await response.json();
             if (data.length === null || data.length === 0) {
                 setRatings([]);

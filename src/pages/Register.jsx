@@ -70,7 +70,7 @@ const Register = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        "http://localhost:7723/api/register",
+                        "https://ccsreservaton.online/api/register",
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },

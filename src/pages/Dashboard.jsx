@@ -55,7 +55,7 @@ const Dashboard = () => {
         const getStatus = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/status_count"
+                    "https://ccsreservaton.online/api/status_count"
                 );
 
                 if (!response.ok) {
@@ -133,7 +133,7 @@ const Dashboard = () => {
         const getProfit = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/payment_amount"
+                    "https://ccsreservaton.online/api/payment_amount"
                 );
 
                 if (!response.ok) {
@@ -159,7 +159,7 @@ const Dashboard = () => {
         const getClientCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/client_count"
+                    "https://ccsreservaton.online/api/client_count"
                 );
 
                 if (!response.ok) {
@@ -183,7 +183,7 @@ const Dashboard = () => {
         const getReservationCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/reservation_count"
+                    "https://ccsreservaton.online/api/reservation_count"
                 );
 
                 if (!response.ok) {
@@ -207,7 +207,7 @@ const Dashboard = () => {
         const getMenuCount = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/menu_count"
+                    "https://ccsreservaton.online/api/menu_count"
                 );
 
                 if (!response.ok) {
@@ -231,7 +231,7 @@ const Dashboard = () => {
         const fetchMonthlyProfit = async (month) => {
             try {
                 const response = await fetch(
-                    `http://localhost:7723/api/transaction_sum/${month}`
+                    `https://ccsreservaton.online/api/transaction_sum/${month}`
                 );
 
                 if (!response.ok) {

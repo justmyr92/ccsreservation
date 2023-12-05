@@ -56,7 +56,9 @@ const Transaction = () => {
     const [search, setSearch] = useState("");
     useEffect(() => {
         const getClients = async () => {
-            const response = fetch("http://localhost:7723/api/transactions");
+            const response = fetch(
+                "https://ccsreservaton.online/api/transactions"
+            );
             const data = await (await response).json();
             setTransactions(data);
         };

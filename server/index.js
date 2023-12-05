@@ -343,7 +343,7 @@ app.use("/api", authRoute);
 //     }
 // });
 
-// //http://localhost:7723/api/clients
+// //https://ccsreservaton.online/api/clients
 // app.get("/clients", async (req, res) => {
 //     try {
 //         const result = await pool.query("SELECT * FROM client_table");
@@ -354,7 +354,7 @@ app.use("/api", authRoute);
 //     }
 // });
 
-// //http://localhost:7723/api/menu
+// //https://ccsreservaton.online/api/menu
 // app.get("/foods", async (req, res) => {
 //     try {
 //         const result = await pool.query("SELECT * FROM food_table");

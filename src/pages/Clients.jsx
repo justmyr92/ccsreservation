@@ -63,7 +63,7 @@ const Clients = () => {
         const getClients = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:7723/api/clients"
+                    "https://ccsreservaton.online/api/clients"
                 );
                 const result = await response.json();
                 setClients(result);

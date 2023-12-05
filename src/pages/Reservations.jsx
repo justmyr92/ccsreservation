@@ -27,7 +27,7 @@ const Reservations = () => {
     useEffect(() => {
         const getReservations = async () => {
             const response = await fetch(
-                "http://localhost:7723/api/reservations"
+                "https://ccsreservaton.online/api/reservations"
             );
             const result = await response.json();
             if (search !== "") {

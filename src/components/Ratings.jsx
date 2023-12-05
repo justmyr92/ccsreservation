@@ -16,7 +16,7 @@ const Ratings = ({ clientData }) => {
     useEffect(() => {
         const getRatings = async () => {
             const response = await fetch(
-                `http://localhost:7723/api/event_reservation_rating/${ID}`
+                `https://ccsreservaton.online/api/event_reservation_rating/${ID}`
             );
 
             const data = await response.json();
@@ -41,7 +41,7 @@ const Ratings = ({ clientData }) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const response = await fetch(
-                    `http://localhost:7723/api/ratings/${rating_id}`,
+                    `https://ccsreservaton.online/api/ratings/${rating_id}`,
                     {
                         method: "DELETE",
                     }

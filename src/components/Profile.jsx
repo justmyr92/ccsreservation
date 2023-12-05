@@ -54,7 +54,7 @@ const Profilee = ({ clientData, setReload }) => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/api/client/${clientData.client_id}`,
+                        `https://ccsreservaton.online/api/client/${clientData.client_id}`,
                         {
                             method: "PATCH",
                             headers: {

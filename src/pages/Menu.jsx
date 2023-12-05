@@ -48,7 +48,7 @@ const Menu = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/api/foods/${foodID}`,
+                        `https://ccsreservaton.online/api/foods/${foodID}`,
                         {
                             method: "DELETE",
                         }
@@ -132,7 +132,9 @@ const Menu = () => {
     useEffect(() => {
         const fetchMenu = async () => {
             try {
-                const response = await fetch("http://localhost:7723/api/foods");
+                const response = await fetch(
+                    "https://ccsreservaton.online/api/foods"
+                );
                 const result = await response.json();
 
                 // Convert search to lowercase
@@ -218,7 +220,7 @@ const Menu = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        "http://localhost:7723/api/foods",
+                        "https://ccsreservaton.online/api/foods",
                         {
                             method: "POST",
                             headers: {
@@ -271,7 +273,7 @@ const Menu = () => {
             if (result.isConfirmed) {
                 try {
                     const response = await fetch(
-                        `http://localhost:7723/api/foods/${selectedFoodID}`,
+                        `https://ccsreservaton.online/api/foods/${selectedFoodID}`,
                         {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
