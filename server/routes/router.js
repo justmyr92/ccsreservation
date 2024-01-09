@@ -1,19 +1,19 @@
 const router = require("express").Router();
 const pool = require("../db/calinao.db");
 const bcrypt = require("bcrypt");
-const multer = require("multer");
+// const multer = require("multer");
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "../src/assets/foods/"); // Define the destination folder
-    },
-    filename: (req, file, cb) => {
-        const ext = file.originalname.split(".").pop();
-        cb(null, Date.now() + "-" + file.fieldname + "." + ext); // Define the file name
-    },
-});
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, "../src/assets/foods/"); // Define the destination folder
+//     },
+//     filename: (req, file, cb) => {
+//         const ext = file.originalname.split(".").pop();
+//         cb(null, Date.now() + "-" + file.fieldname + "." + ext); // Define the file name
+//     },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 router.get("/transactions", async (req, res) => {
     try {
@@ -1182,17 +1182,16 @@ router.get("/balance/:reservation_id", async (req, res) => {
 });
 
 //delete food from food table and reservation_food_table
-router.delete("/delete/food/:food_id", async (req, res) => {
+router.delete("/delete/food", async (req, res) => {
     try {
-        const { food_id } = req.params;
-
-        const result = await pool.query(
-            "DELETE FROM food_table WHERE food_id = $1",
-            [food_id]
-        );
+        const { food_id } = req.body;
 
         const result2 = await pool.query(
             "DELETE FROM reservation_food_table WHERE food_id = $1",
+            [food_id]
+        );
+        const result = await pool.query(
+            "DELETE FROM food_table WHERE food_id = $1",
             [food_id]
         );
 
