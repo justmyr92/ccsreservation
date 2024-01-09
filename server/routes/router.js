@@ -1181,5 +1181,33 @@ router.get("/balance/:reservation_id", async (req, res) => {
     }
 });
 
+//delete food from food table and reservation_food_table
+router.delete("/delete/food/:food_id", async (req, res) => {
+    try {
+        const { food_id } = req.params;
+
+        const result = await pool.query(
+            "DELETE FROM food_table WHERE food_id = $1",
+            [food_id]
+        );
+
+        const result2 = await pool.query(
+            "DELETE FROM reservation_food_table WHERE food_id = $1",
+            [food_id]
+        );
+
+        res.status(200).json({
+            success: true,
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+        });
+    }
+});
+
 //import router
 module.exports = router;

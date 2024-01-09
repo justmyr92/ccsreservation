@@ -231,12 +231,12 @@ const Menu = () => {
                     );
 
                     const result = await response.json();
-                   if (response.ok) {
+                    if (response.ok) {
                         const imageRef = ref(
                             storage,
                             `foods/${new_food_image}`
                         );
-                        
+
                         uploadBytes(imageRef, foodImage).then(() => {
                             setReload(!reload);
                             setFoodName("");
