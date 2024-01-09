@@ -1182,9 +1182,9 @@ router.get("/balance/:reservation_id", async (req, res) => {
 });
 
 //delete food from food table and reservation_food_table
-router.delete("/delete/food", async (req, res) => {
+router.delete("/delete/food/:food_id", async (req, res) => {
     try {
-        const { food_id } = req.body;
+        const { food_id } = req.params;
 
         const result2 = await pool.query(
             "DELETE FROM reservation_food_table WHERE food_id = $1",
