@@ -26,6 +26,7 @@ const Menu = () => {
     const [updateFoodType, setUpdateFoodType] = useState("");
     const [updateFoodPrice, setUpdateFoodPrice] = useState("");
     const [updateFoodDescription, setUpdateFoodDescription] = useState("");
+
     const updateInputRef = useRef(null);
 
     const handleUpdateClick = (food) => {
@@ -191,14 +192,6 @@ const Menu = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const new_food_image = foodImage.name + v4();
-        // var formData = new FormData();
-
-        // formData.append("food_name", foodName);
-        // formData.append("food_type", foodType);
-        // formData.append("food_price", foodPrice);
-        // formData.append("food_description", foodDescription);
-        // formData.append("food_image", foodImage); // Assuming foodImage is a File object
-        // formData.append("food_image_name", new_food_image);
         const data = {
             food_name: foodName,
             food_type: foodType,
@@ -207,10 +200,8 @@ const Menu = () => {
             food_image: new_food_image,
         };
 
-        // for (var pair of formData.entries()) {
-        //     console.log(pair[0] + ", " + pair[1]);
-        // }
         document.getElementById("add_food_modal").close();
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -236,7 +227,6 @@ const Menu = () => {
                             storage,
                             `foods/${new_food_image}`
                         );
-
                         uploadBytes(imageRef, foodImage).then(() => {
                             setReload(!reload);
                             setFoodName("");
@@ -249,7 +239,13 @@ const Menu = () => {
                     }
                 } catch (err) {
                     console.log(err);
+                } finally {
+                    // Set reload to false after the entire asynchronous process is complete
+                    setReload(false);
                 }
+            } else {
+                // Set reload to false if the user cancels the operation
+                setReload(false);
             }
         });
     };
@@ -304,7 +300,17 @@ const Menu = () => {
     };
     return (
         <>
-            <section className="menu__section h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row">
+            <section className="menu__section h-screen bg-gradient-to-r from-cyan-500 to-blue-500 flex flex-row relative">
+                <div className="toast toast-bottom toast-end z-50">
+                    {reload && (
+                        <div className="alert alert-primary-content shadow-lg border border-gray-400">
+                            <span className="flex items-center">
+                                <span className="loading loading-dots loading-md mr-3"></span>
+                                <span>Uploading...</span>
+                            </span>
+                        </div>
+                    )}
+                </div>
                 <Sidebar roleID={roleID} />
                 <div className="flex flex-col w-full h-full p-3 overflow-auto">
                     <div className="bg-white rounded-lg shadow-lg p-6">
