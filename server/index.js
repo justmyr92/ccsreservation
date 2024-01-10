@@ -13,7 +13,7 @@ app.use(cors());
 
 app.use("/api", authRoute);
 
-// ssh -i "mabini.pem" ubuntu@ec2-54-179-35-184.ap-southeast-1.compute.amazonaws.com
+
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is starting on port ${process.env.PORT}`);
